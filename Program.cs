@@ -9,6 +9,17 @@ builder.Services.AddDbContext<PizzadminContext>(Options => Options.UseSqlServer(
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+#region Repositories
+
+#endregion
+
+
+#region Services
+
+
+#endregion
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
