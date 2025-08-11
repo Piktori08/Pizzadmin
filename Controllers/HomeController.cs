@@ -16,6 +16,7 @@ namespace Pizzadmin.Controllers
 
         public IActionResult Index()
         {
+            ViewData["active"] = "dashboard";
             return View();
         }
 

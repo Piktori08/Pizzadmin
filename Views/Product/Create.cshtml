@@ -1,0 +1,51 @@
+﻿@model Pizzadmin.Models.ProductForCreate;
+@{
+    ViewData["Title"] = "Create Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Create Product</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <label>Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" asp-for="Name" autocomplete="off" required />
+                </div>
+                <div class="col-12 col-lg-6">
+                    <label>Description <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" asp-for="Description" autocomplete="off" required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <label>Price <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" asp-for="Price" autocomplete="off" required />
+                </div>
+                <div class="col-12 col-lg-6">
+                    <label>Image URL <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" asp-for="ImageUrl" autocomplete="off" required />
+                </div>
+            </div>
+            <div class="row justify-content-between float-right">
+                <div class="col text-end">
+                    <a class="btn btn-secondary" asp-controller="Product" asp-action="Index"><i class="fa-solid fa-xmark"></i> Cancel</a>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i>  Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+
+    <style>
+        .card {
+            width: 90%;
+            margin-left: 5%;
+        }
+    </style>
+}

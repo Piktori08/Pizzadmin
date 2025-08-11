@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pizzadmin.Data;
+using Pizzadmin.Repositories;
+using Pizzadmin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PizzadminContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("PizzadminContext") ??
@@ -11,11 +13,14 @@ builder.Services.AddControllersWithViews();
 
 #region Repositories
 
+builder.Services.AddScoped<ProductRepository, ProductRepository>();
+
 #endregion
 
 
 #region Services
 
+builder.Services.AddTransient<IProductService, ProductService>();
 
 #endregion
 
