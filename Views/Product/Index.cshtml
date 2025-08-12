@@ -6,69 +6,328 @@
 }
 
 
-<div class="card">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-md-6">
-                <h4 class="card-title">Product List</h4>
-            </div>
-            <div class="col-md-6">
-                <a class="btn btn-primary float-right" asp-action="Create"><i class="fa-solid fa-circle-plus"></i> Create</a>
-            </div>
+
+<div class="container">
+    <h1 class="carousel-title">Featured Products</h1>
+
+    <div class="carousel-wrapper">
+        <button class="carousel-btn prev">‹</button>
+
+        <div class="carousel-window">
+            <div class="carousel-track">
+                @foreach (var p in Model)
+                {
+                   
+                <div class="card product-card carousel">
+                    <div class="product-image">
+                        <img src="@p.ImageUrl" />
+                    </div>
+                    <div class="card-body text-center">
+                        <h3 class="product-title">@p.Name</h3>
+                        <p class="product-description">@p.Description</p>
+                        <div class="product-price">@p.Price</div>
+                        <button class="btn btn-primary btn-purchase">Add to Cart</button>
+                    </div>
+                    </div>
+
+                }
         </div>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table">
-                <thead class="text-primary">
-                    <tr>
-                        <th>
-                            No
-                        </th>
-                        <th>
-                            Name
-                        </th>
-                        <th>
-                            Description
-                        </th>
-                        <th>
-                            Price
-                        </th>
-                        <th class="text-right">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var p in Model)
-                    {
-                        no++;
-                        <tr>
-                            <td>@no</td>
-                            <td>@p.Name</td>
-                            <td>@p.Description</td>
-                            <td>$@p.Price</td>
-                            <td class="text-right">
-                                <a asp-action="Edit" asp-route-id="@p.Id" data-toggle="tooltip" data-placement="top" title="Change">
-                                    <i class="fa fa-pen"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@p.Id" data-toggle="tooltip" data-placement="top" title="Remove">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+
+        <button class="carousel-btn next">›</button>
     </div>
 </div>
+</div>
+
+
 
 @section Scripts{
     <style>
-        .card {
-            width: 90%;
-            margin-left: 5%;
+        .carousel-title {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
+
+        .carousel-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .carousel-window {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .product-card {
+            background: white;
+            border: none;
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 0 10px;
+            flex: 0 0 calc(33.333% - 20px); /* 3 per view on desktop */
+        }
+
+        media (max-width: 992px) {
+            .product-card
+
+        {
+            flex: 0 0 calc(50% - 20px); /* 2 per view on tablet */
+        }
+
+        }
+
+        media (max-width: 576px) {
+            .product-card
+
+        {
+            flex: 0 0 calc(100% - 20px); /* 1 per view on mobile */
+        }
+
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #764ba2;
+            margin-bottom: 1.25rem;
+        }
+
+        .btn-purchase {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+            .btn-purchase:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+                background: linear-gradient(45deg, #764ba2, #667eea);
+            }
+
+        .carousel-btn {
+            background: rgba(118, 75, 162, 0.8);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+            .carousel-btn:hover {
+                background: rgba(118, 75, 162, 1);
+            }
+
+
     </style>
+    <script>
+               /* Smooth, infinite, one-card-per-click slider with responsive slides-per-view.
+           Place at the end of <body> or load with "defer" */
+        (() => {
+          const track = document.querySelector('.carousel-track');
+          const prevBtn = document.querySelector('.carousel-btn.prev');
+          const nextBtn = document.querySelector('.carousel-btn.next');
+
+          if (!track || !prevBtn || !nextBtn) {
+            console.warn('Carousel elements not found. Check selectors.');
+            return;
+          }
+
+          const originalHTML = track.innerHTML; // snapshot so we can re-init on resize
+          let originalCards = [];
+          let cardsAll = [];
+          let slidesToShow = 3;
+          let cloneCount = 0;
+          let index = 0;
+          let cardWidth = 0;
+          let isAnimating = false;
+          let resizeTimeout = null;
+
+          function getSlidesToShow() {
+            const w = window.innerWidth;
+            if (w >= 992) return 3;
+            if (w >= 576) return 2;
+            return 1;
+          }
+
+          function getCardWidth() {
+            const first = track.querySelector('.product-card');
+            if (!first) return 0;
+            const style = window.getComputedStyle(first);
+            const marginLeft = parseFloat(style.marginLeft) || 0;
+            const marginRight = parseFloat(style.marginRight) || 0;
+            return Math.round(first.getBoundingClientRect().width + marginLeft + marginRight);
+          }
+
+          function setupClones() {
+            // restore original html, then reselect originals
+            track.innerHTML = originalHTML;
+            originalCards = Array.from(track.querySelectorAll('.product-card'));
+
+            slidesToShow = getSlidesToShow();
+            cloneCount = slidesToShow;
+
+            // remove any existing clones (we just reset innerHTML so it's clean)
+            // clone last N to front, first N to end
+            const firsts = originalCards.slice(0, cloneCount).map(n => n.cloneNode(true));
+            const lasts  = originalCards.slice(-cloneCount).map(n => n.cloneNode(true));
+
+            // prepend reversed lasts
+            lasts.reverse().forEach(node => {
+              node.classList.add('clone');
+              track.insertBefore(node, track.firstChild);
+            });
+            // append firsts
+            firsts.forEach(node => {
+              node.classList.add('clone');
+              track.appendChild(node);
+            });
+
+            cardsAll = Array.from(track.querySelectorAll('.product-card'));
+            cardWidth = getCardWidth();
+            index = cloneCount; // start at first real card
+            // immediately position without animation
+            track.style.transition = 'none';
+            track.style.transform = `translateX(${-index * cardWidth}px)`;
+            // force reflow then restore transition
+            void track.offsetWidth;
+            track.style.transition = 'transform 0.5s ease-in-out';
+          }
+
+          function next() {
+            if (isAnimating) return;
+            isAnimating = true;
+            index++;
+            track.style.transform = `translateX(${-index * cardWidth}px)`;
+          }
+
+          function prev() {
+            if (isAnimating) return;
+            isAnimating = true;
+            index--;
+            track.style.transform = `translateX(${-index * cardWidth}px)`;
+          }
+
+          // handle end of transition -> snap when we are in clones
+          track.addEventListener('transitionend', () => {
+            const originalCount = originalCards.length;
+            // If we've moved past the last original into appended clones:
+            if (index >= cloneCount + originalCount) {
+              // snap back to the first original
+              index = cloneCount;
+              track.style.transition = 'none';
+              track.style.transform = `translateX(${-index * cardWidth}px)`;
+              // force reflow then restore transition
+              void track.offsetWidth;
+              track.style.transition = 'transform 0.5s ease-in-out';
+            }
+            // If we've moved before the first original into prepended clones:
+            if (index < cloneCount) {
+              // snap to the last original
+              index = cloneCount + originalCount - 1;
+              track.style.transition = 'none';
+              track.style.transform = `translateX(${-index * cardWidth}px)`;
+              void track.offsetWidth;
+              track.style.transition = 'transform 0.5s ease-in-out';
+            }
+            isAnimating = false;
+          });
+
+          // buttons
+          nextBtn.addEventListener('click', (e) => { e.preventDefault(); next(); });
+          prevBtn.addEventListener('click', (e) => { e.preventDefault(); prev(); });
+
+          // keyboard optional: left/right arrows
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') next();
+            if (e.key === 'ArrowLeft') prev();
+          });
+
+          // delegate Add-to-Cart clicks so cloned buttons work too
+          document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-purchase');
+            if (!btn) return;
+            e.preventDefault();
+            const body = btn.closest('.card-body');
+            if (!body) return;
+            const productName = body.querySelector('.product-title')?.textContent ?? '';
+            const productPrice = body.querySelector('.product-price')?.textContent ?? '';
+            btn.textContent = 'Added!';
+            btn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+            setTimeout(() => {
+              btn.textContent = 'Add to Cart';
+              btn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+            }, 1300);
+            console.log(`Added ${productName} (${productPrice}) to cart`);
+          });
+
+          // re-init on resize (debounced) — rebuild clones because slidesToShow may change
+          window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+              // if slidesToShow changes, rebuild
+              const newShow = getSlidesToShow();
+              if (newShow !== slidesToShow) {
+                setupClones();
+              } else {
+                // just recalc width and reposition
+                cardWidth = getCardWidth();
+                track.style.transition = 'none';
+                track.style.transform = `translateX(${-index * cardWidth}px)`;
+                void track.offsetWidth;
+                track.style.transition = 'transform 0.5s ease-in-out';
+              }
+            }, 120);
+          });
+
+          // initial setup
+          setupClones();
+        })();
+
+    </script>
 }
