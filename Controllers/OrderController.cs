@@ -2,15 +2,18 @@
 using Pizzadmin.Data;
 using Pizzadmin.Models;
 using Pizzadmin.Services;
+using System.Threading.Tasks;
 
 namespace Pizzadmin.Controllers
 {
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly IProductService _productService;
+        public OrderController(IOrderService orderService, IProductService productService)
         {
             _orderService = orderService;
+            _productService = productService;
         }
         public async Task<IActionResult> Index()
         {
@@ -19,22 +22,31 @@ namespace Pizzadmin.Controllers
             return View(orders);
         }
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = ;
+            var model = new OrderForCreation
+            {
+                Products = await _productService.GetProductsAsync()
+            };
 
             ViewData["active"] = "orders";
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(OrderForCreation model)
         {
-            
-            await _orderService.AddOrder(model);
+            //var order = new Order
+            //{
+            //    OrderNumber = model.OrderNumber,
+            //    TotalPrice = 200
+            //};
+
+            //await _orderService.AddOrder(order);
             return RedirectToAction("Index");
         }
-               
-        [HttpPost]
+        
+
         public async Task<IActionResult> Delete(int id)
         {
             await _orderService.DeleteOrder(id);
