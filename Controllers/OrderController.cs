@@ -32,8 +32,6 @@ namespace Pizzadmin.Controllers
             
             await _orderService.AddOrder(model);
             return RedirectToAction("Index");
-
-
         }
                
         [HttpPost]
