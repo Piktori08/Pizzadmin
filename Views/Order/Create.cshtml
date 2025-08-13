@@ -277,7 +277,50 @@
         }
 
         function minus(productId){
-            alert(productId);
+            var productName = document.getElementById("productName-" + productId).innerHTML;
+            var productPrice = document.getElementById("productPrice-" + productId).innerHTML;
+
+            let row = document.getElementById('row-' + productId);
+
+            if (parseInt(document.getElementById('spanQuantity-' + productId).innerHTML) == 0){
+                $('.total-body').append(
+                    `<div class="row" id="row-${productId}">
+                        <div class="col-md-6">
+                             <span>
+                                
+                             </span>
+                         </div>
+                           <div class="col-md-2">
+                               <span id="spanQuantity-${productId}"> </span>
+                           </div>
+                           <div class="col-md-4">
+                            <span id="spanPrice-${productId}"> </span>
+                        </div>
+                     </div>`
+                 );
+                 alert("huh");
+            }
+            else {
+                let quantitySpan = document.getElementById('spanQuantity-' + productId);
+                let currentQuantity = parseInt(quantitySpan.innerHTML);
+                let row = document.getElementById('row-' + productId);
+                let priceSpan = document.getElementById('spanPrice-' + productId);
+                let currentPrice = parseFloat(priceSpan.innerHTML);
+                if(currentQuantity> 0)
+                    {
+                    currentQuantity--;
+                    quantitySpan.innerHTML = currentQuantity;
+                    currentPrice -= parseFloat(productPrice);
+                    priceSpan.innerHTML = currentPrice;
+                } else{
+                    quantitySpan.innerHTML = currentQuantity;
+                    priceSpan.innerHTML = currentPrice;
+                }
+                    if (currentQuantity == 0) {
+                        row.remove();
+                    }
+                
+            }
         }
     </script>
 }
