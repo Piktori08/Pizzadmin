@@ -34,19 +34,24 @@ namespace Pizzadmin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(OrderForCreation model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromBody] OrderForCreation model)
         {
-            //var order = new Order
-            //{
-            //    OrderNumber = model.OrderNumber,
-            //    TotalPrice = 200
-            //};
+            var productIds = model.ProductIds.Select(int.Parse).ToList();
+            var quantities = model.Quantities.Select(int.Parse).ToList();
 
-            //await _orderService.AddOrder(order);
-            return RedirectToAction("Index");
+            var order = new Order
+            {
+                TotalPrice = decimal.Parse(model.TotalPrice)
+            };
+            await _orderService.AddOrder(order);
+
+            order.OrderNumber = $"Order_{order.Id}";
+            await _orderService.UpdateOrder(order);
+
+            return Ok(new { success = true, message = "Order processed.", redirectUrl = "/Order/Index" });
         }
         
-
         public async Task<IActionResult> Delete(int id)
         {
             await _orderService.DeleteOrder(id);

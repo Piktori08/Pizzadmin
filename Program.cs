@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Pizzadmin.Data;
 using Pizzadmin.Repositories;
 using Pizzadmin.Services;
@@ -9,7 +10,12 @@ builder.Services.AddDbContext<PizzadminContext>(Options => Options.UseSqlServer(
 
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+.AddNewtonsoftJson(options =>
+ {
+     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+     options.SerializerSettings.MaxDepth = 32; // Adjust as needed
+ });
 
 #region Repositories
 

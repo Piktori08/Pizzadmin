@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@Html.AntiForgeryToken()
+
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Create Order</h1>
@@ -79,9 +81,10 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-12 totalPrice">
-                            <h5>Total Price: $50</h5>
+                            <h5>Total Price: $<span id="full-total"></span></h5>
                         </div>
                     </div>
+                    <button class="btn btn-primary" onclick="Save()"> <i class="fas fa-floppy-disk"></i> Save</button>
                 </div>
             </div>
         </div>
@@ -237,6 +240,9 @@
 
 
     <script>
+
+        let totalPrice = 0;
+
         function plus(productId){
             var productName = document.getElementById("productName-" + productId).innerHTML;
             var productPrice = document.getElementById("productPrice-" + productId).innerHTML;
@@ -259,6 +265,8 @@
                         </div>
                     </div>`
                 );
+                totalPrice += parseFloat(productPrice);
+                document.getElementById('full-total').innerHTML = totalPrice;
             }
             else {
                 let quantitySpan = document.getElementById('spanQuantity-' + productId);
@@ -272,6 +280,8 @@
                 let currentPrice = parseFloat(priceSpan.innerHTML);
                 currentPrice += parseFloat(productPrice);
                 priceSpan.innerHTML = currentPrice;
+                totalPrice += parseFloat(productPrice);
+                document.getElementById('full-total').innerHTML = totalPrice;
             }
 
         }
@@ -298,7 +308,6 @@
                         </div>
                      </div>`
                  );
-                 alert("huh");
             }
             else {
                 let quantitySpan = document.getElementById('spanQuantity-' + productId);
@@ -319,8 +328,45 @@
                     if (currentQuantity == 0) {
                         row.remove();
                     }
-                
+                totalPrice -= parseFloat(productPrice);
+                document.getElementById('full-total').innerHTML = totalPrice;
             }
+        }
+
+        function Save(){
+            let totalPrice = document.getElementById('full-total').innerHTML;
+
+            const elements = document.querySelectorAll('[id^="spanQuantity-"]');
+            const quantities = Array.from(elements).map(el => el.innerHTML);
+
+            const pElements = document.querySelectorAll('[id^="spanPrice-"]');
+            const productIds = Array.from(pElements).map(el => el.id.substring("spanPrice-".length));
+
+            fetch('/Order/Create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    productIds: productIds,
+                    quantities: quantities,
+                    totalPrice: totalPrice
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server response:', data);
+                if (data.success) {
+                // Show success message (optional)
+                alert(data.message);
+                // Redirect using the URL from server
+                window.location.href = data.redirectUrl;
+                } else {
+                    alert('Order failed: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
 }
