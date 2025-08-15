@@ -16,7 +16,7 @@
             <div class="row">
                 @foreach (var product in Model.Products)
                 {
-                    <input type="hidden" value="@product.Id" name="productId"/>
+                    @* <input type="hidden" value="@product.Id" name="productId"/> *@
                     <div class="col-md-3 mb-4">
                         <div class="card h-90 product-card">
                             <div class="card-img-container position-relative">
@@ -32,7 +32,6 @@
                                     </div>
                                 }
                                 <!-- Action Icons -->
-
                             </div>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title" id="productName-@product.Id">@product.Name</h5>
@@ -43,7 +42,7 @@
                                         <a onclick="minus('@product.Id')" href="#" class="productP">
                                             <i class="fa-solid fa-minus"></i>
                                         </a>
-                                        <input type="number" class="form-control" />
+                                        <input type="number" min="0" class="form-control" id="label-@product.Id" onchange="LabelOrder('@product.Id')" />
                                         <a onclick="plus('@product.Id')" href="#" class="productP">
                                             <i class="fa-solid fa-plus"></i>
                                         </a>
@@ -64,19 +63,7 @@
                 </div>
                 <div class="card-body">
                     <div class="total-body">
-                        @* <div class="row">
-                            <div class="col-md-6">
-                                <span>
-                                    Big bugrer
-                                </span>
-                            </div>
-                            <div class="col-md-2">
-                                <span>2</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>$28.00</span>
-                            </div>
-                        </div> *@
+                        @* The row appends here *@
                     </div>
                     <hr/>
                     <div class="row">
@@ -90,44 +77,6 @@
         </div>
     </div>
 </div>
-
-
-
-@* <div class="card">
-    <div class="card-header">
-        <h4 class="card-title">Create Order</h4>
-    </div>
-    <div class="card-body">
-        <form asp-action="Create" method="post">
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <label>No <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" asp-for="OrderNumber" autocomplete="off" required />
-                </div>
-                <div class="col-12 col-lg-6">
-                    <label>Description <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" asp-for="Description" autocomplete="off" required />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <label>Price <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" asp-for="Price" autocomplete="off" required />
-                </div>
-                <div class="col-12 col-lg-6">
-                    <label>Image URL <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" asp-for="ImageUrl" autocomplete="off" required />
-                </div>
-            </div>
-            <div class="row justify-content-between float-right">
-                <div class="col text-end">
-                    <a class="btn btn-secondary" asp-controller="Product" asp-action="Index"><i class="fa-solid fa-xmark"></i> Cancel</a>
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i>  Save</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div> *@
 
 @section Scripts {
 
@@ -244,6 +193,7 @@
         let totalPrice = 0;
 
         function plus(productId){
+
             var productName = document.getElementById("productName-" + productId).innerHTML;
             var productPrice = document.getElementById("productPrice-" + productId).innerHTML;
             
@@ -284,9 +234,15 @@
                 document.getElementById('full-total').innerHTML = totalPrice;
             }
 
+            let quantitySpan = document.getElementById('spanQuantity-' + productId);
+            let q = document.getElementById('label-' + productId);
+
+            q.value = quantitySpan.innerHTML;
+
         }
 
         function minus(productId){
+            
             var productName = document.getElementById("productName-" + productId).innerHTML;
             var productPrice = document.getElementById("productPrice-" + productId).innerHTML;
 
@@ -310,11 +266,13 @@
                  );
             }
             else {
+
                 let quantitySpan = document.getElementById('spanQuantity-' + productId);
                 let currentQuantity = parseInt(quantitySpan.innerHTML);
                 let row = document.getElementById('row-' + productId);
                 let priceSpan = document.getElementById('spanPrice-' + productId);
                 let currentPrice = parseFloat(priceSpan.innerHTML);
+
                 if(currentQuantity> 0)
                     {
                     currentQuantity--;
@@ -329,6 +287,61 @@
                         row.remove();
                     }
                 totalPrice -= parseFloat(productPrice);
+                document.getElementById('full-total').innerHTML = totalPrice;
+
+                let q = document.getElementById('label-' + productId);
+
+                q.value = quantitySpan.innerHTML;
+            }
+
+            
+        }
+
+        function LabelOrder(productId){
+            let q = document.getElementById('label-' + productId);
+            var productName = document.getElementById("productName-" + productId).innerHTML;
+            var productPrice = document.getElementById("productPrice-" + productId).innerHTML;
+
+            let currentPrice = parseFloat(q.value) * parseFloat(productPrice);
+
+            let row = document.getElementById('row-' + productId);
+
+            if (q.value == 0){
+                row.remove();
+            }
+
+            if (row == null){
+               $('.total-body').append(
+                    `<div class="row" id="row-${productId}">
+                        <div class="col-md-6">
+                            <span>
+                                ${productName}
+                            </span>
+                        </div>
+                        <div class="col-md-2">
+                            <span id="spanQuantity-${productId}">${q.value}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span id="spanPrice-${productId}">${currentPrice}</span>
+                        </div>
+                    </div>`
+                );
+                totalPrice += currentPrice;
+                document.getElementById('full-total').innerHTML = totalPrice;
+            }
+            else {
+                let quantitySpan = document.getElementById('spanQuantity-' + productId);
+                let currentQuantity = parseInt(quantitySpan.innerHTML);
+
+                currentQuantity = q.value;
+                quantitySpan.innerHTML = currentQuantity;
+
+
+                let priceSpan = document.getElementById('spanPrice-' + productId);
+                let currentPrice = parseFloat(priceSpan.innerHTML);
+                currentPrice += parseFloat(productPrice);
+                priceSpan.innerHTML = currentPrice;
+                totalPrice += parseFloat(productPrice);
                 document.getElementById('full-total').innerHTML = totalPrice;
             }
         }

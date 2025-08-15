@@ -17,5 +17,10 @@ namespace Pizzadmin.Services
         {
             await _context.CreateOrderProducts(orderId, productId, quantities);
         }
+
+        public async Task DeleteOrderProducts(int orderId)
+        {
+            await _context.DeleteOrderProducts(orderId);
+        }
     }
 }

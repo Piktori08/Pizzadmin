@@ -60,7 +60,9 @@ namespace Pizzadmin.Controllers
         
         public async Task<IActionResult> Delete(int id)
         {
+            await _orderProductsService.DeleteOrderProducts(id);
             await _orderService.DeleteOrder(id);
+
             return RedirectToAction("Index");
         }
     }
