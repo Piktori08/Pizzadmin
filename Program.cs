@@ -21,6 +21,7 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddScoped<ProductRepository, ProductRepository>();
 builder.Services.AddScoped<OrderRepository, OrderRepository>();
+builder.Services.AddScoped<OrderProductsRepository, OrderProductsRepository>();
 
 #endregion
 
@@ -29,7 +30,7 @@ builder.Services.AddScoped<OrderRepository, OrderRepository>();
 
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
-
+builder.Services.AddTransient<IOrderProductsService, OrderProductsService>();
 #endregion
 
 

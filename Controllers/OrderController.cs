@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Pizzadmin.Data;
+using Pizzadmin.Migrations;
 using Pizzadmin.Models;
 using Pizzadmin.Services;
 using System.Threading.Tasks;
@@ -10,10 +12,12 @@ namespace Pizzadmin.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
-        public OrderController(IOrderService orderService, IProductService productService)
+        private readonly IOrderProductsService _orderProductsService;
+        public OrderController(IOrderService orderService, IProductService productService, IOrderProductsService orderProductsService)
         {
             _orderService = orderService;
             _productService = productService;
+            _orderProductsService = orderProductsService;
         }
         public async Task<IActionResult> Index()
         {
@@ -45,9 +49,11 @@ namespace Pizzadmin.Controllers
                 TotalPrice = decimal.Parse(model.TotalPrice)
             };
             await _orderService.AddOrder(order);
-
+            
             order.OrderNumber = $"Order_{order.Id}";
             await _orderService.UpdateOrder(order);
+            
+            await _orderProductsService.CreateOrderProducts(order.Id, productIds, quantities);
 
             return Ok(new { success = true, message = "Order processed.", redirectUrl = "/Order/Index" });
         }
