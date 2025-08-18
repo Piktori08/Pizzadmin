@@ -46,7 +46,7 @@ namespace Pizzadmin.Controllers
 
             var order = new Order
             {
-                TotalPrice = decimal.Parse(model.TotalPrice)
+                TotalPrice = decimal.Parse(model.TotalPrice),
             };
             await _orderService.AddOrder(order);
             

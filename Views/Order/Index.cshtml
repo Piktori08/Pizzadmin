@@ -18,7 +18,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table table-striped" id="example">
                 <thead class="text-primary">
                     <tr>
                         <th>
@@ -29,6 +29,9 @@
                         </th>
                         <th>
                             Price
+                        </th>
+                        <th>
+                            Created at:
                         </th>
                         <th class="text-right">
                             Actions
@@ -43,6 +46,7 @@
                             <td>@no</td>
                             <td>@p.OrderNumber</td>
                             <td>$@p.TotalPrice</td>
+                            <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                             <td class="text-right">
                                 <a asp-action="Delete" asp-route-id="@p.Id" data-toggle="tooltip" data-placement="top" title="Remove">
                                     <i class="fa fa-trash"></i>
@@ -62,5 +66,31 @@
             width: 90%;
             margin-left: 5%;
         }
+
+        button.dt-paging-button:hover {
+            background: #f96332 !important; /* your hover color */
+            color: #fff !important; /* text color */
+        }
+
+        /* Current (active) page button */
+        button.dt-paging-button.current {
+            background: #f96332 !important; /* Blue (or your color) */
+            color: #fff !important; /* White text */   
+            border-color: #f96332 !important;
+        }
+        /* Disabled state */
+        button.dt-paging-button.disabled {
+            background-color: #e9ecef !important;
+            color: #6c757d !important;
+            cursor: not-allowed;
+        }
     </style>
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
+
+
+    <script>
+        $('#example').DataTable();
+    </script>
+   
 }

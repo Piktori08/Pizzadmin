@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizzadmin.Data;
 
@@ -11,9 +12,11 @@ using Pizzadmin.Data;
 namespace Pizzadmin.Migrations
 {
     [DbContext(typeof(PizzadminContext))]
-    partial class PizzadminContextModelSnapshot : ModelSnapshot
+    [Migration("20250818113316_dataorderit")]
+    partial class dataorderit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +44,7 @@ namespace Pizzadmin.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Pizzadmin.Data.OrderProduct", b =>
@@ -59,7 +62,7 @@ namespace Pizzadmin.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProducts", (string)null);
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("Pizzadmin.Data.Product", b =>
@@ -85,7 +88,7 @@ namespace Pizzadmin.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Pizzadmin.Data.OrderProduct", b =>

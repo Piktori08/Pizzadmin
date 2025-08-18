@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Pizzadmin.Data;
 using Pizzadmin.Models;
 using Pizzadmin.Services;
@@ -14,11 +15,16 @@ namespace Pizzadmin.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string name)
         {
             var products = await _productService.GetProductsAsync();
             ViewData["active"] = "products";
-
+            if(!name.IsNullOrEmpty())
+            {
+                var filteredProducts = products.Where(fp => fp.Name.ToLower().Contains(name.ToLower())).ToList();
+                ViewBag.Name = name;
+                return View(filteredProducts);
+            }
             return View(products);
         }
 

@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Products";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var name = ViewBag.Name;
 }
 
 
@@ -13,7 +14,26 @@
             <i class="fas fa-plus"></i> Add New Product
         </a>
     </div>
-
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Index">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input name="name" type="text" value="@name" placeholder="Product Name" class="form-control" style="min-height: 40px;" />
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <a asp-action="Index" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>  
+    </div>
+    <br />
     @if (!Model.Any())
     {
         <div class="text-center py-5">
@@ -135,4 +155,6 @@
                     transform: scale(1.1);
                 }
     </style>
+
+
 }
