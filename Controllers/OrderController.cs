@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Pizzadmin.Data;
 using Pizzadmin.Migrations;
@@ -54,7 +55,6 @@ namespace Pizzadmin.Controllers
             await _orderService.UpdateOrder(order);
             
             await _orderProductsService.CreateOrderProducts(order.Id, productIds, quantities);
-
             return Ok(new { success = true, message = "Order processed.", redirectUrl = "/Order/Index" });
         }
         
@@ -64,6 +64,23 @@ namespace Pizzadmin.Controllers
             await _orderService.DeleteOrder(id);
 
             return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> MarkSeen(int id)
+        {
+            var result = await _orderService.ToggleSeenAsync(id);
+            if (!result) return NotFound();
+
+            return Json(new { success = true, isSeen = result });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkCompleted(int id)
+        {
+            var result = await _orderService.ToggleCompletedAsync(id);
+            if (!result) return NotFound();
+
+            return Json(new { success = true, isCompleted = result });
         }
     }
 }

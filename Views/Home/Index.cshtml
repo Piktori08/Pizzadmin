@@ -1,8 +1,247 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var no = 0;
+    var orders = ViewBag.Orders as IEnumerable<Pizzadmin.Data.Order>;
+    var todayOrderCount = ViewBag.TodayOrderCount ?? 0;
+    var todayRevenue = ViewBag.TodayRevenue as decimal? ?? 0m;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Orders today: @todayOrderCount</h4>
+                <h4>Revenue today: $@todayRevenue.ToString("F2")</h4>
+            </div>
+            <div class="card-body">
+                <!-- Search Bar -->
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search by order number...">
+                        </div>
+                        <div class="col-md-6">
+                            <button id="clearSearch" class="btn btn-secondary">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="ordersTable">
+                        <thead class="text-primary">
+                            <tr>
+                                <th>No</th>
+                                <th>Name</th>
+                                <th>Total</th>
+                                <th>Created at</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (orders != null && orders.Any())
+                            {
+                                @foreach (var p in orders)
+                                {
+                                    no++;
+                                    <tr data-order="@p.OrderNumber.ToLower()">
+                                        <td>@no</td>
+                                        <td>@p.OrderNumber</td>
+                                        <td>$@p.TotalPrice.ToString("F2")</td>
+                                        <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr id="noOrdersRow">
+                                    <td colspan="4" class="text-center text-muted">
+                                        No orders found
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div id="pageInfo" class="text-muted">
+                        <small></small>
+                    </div>
+                    <div>
+                        <button id="prevBtn" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-chevron-left"></i> Previous 10
+                        </button>
+                        <button id="nextBtn" class="btn btn-primary">
+                            Next 10 Orders <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+           
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            let currentPage = 1;
+            const itemsPerPage = 10;
+            let filteredRows = [];
+            let allRows = [];
+
+            // Initialize
+            function init() {
+                allRows = $('#ordersTable tbody tr:not(#noOrdersRow)').toArray();
+                filteredRows = [...allRows];
+                showPage(1);
+                updatePaginationInfo();
+            }
+
+            // Show specific page
+            function showPage(page) {
+                currentPage = page;
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+
+                // Hide all rows first
+                $(allRows).hide();
+                $('#noOrdersRow').hide();
+
+                if (filteredRows.length === 0) {
+                    $('#noOrdersRow').show();
+                } else {
+                    // Show only rows for current page
+                    for (let i = startIndex; i < endIndex && i < filteredRows.length; i++) {
+                        $(filteredRows[i]).show();
+                        // Update row number
+                        $(filteredRows[i]).find('td:first').text(i + 1);
+                    }
+                }
+
+                updatePaginationButtons();
+                updatePaginationInfo();
+            }
+
+            // Update pagination buttons
+            function updatePaginationButtons() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+
+                $('#prevBtn').prop('disabled', currentPage === 1);
+                $('#nextBtn').prop('disabled', currentPage >= totalPages);
+
+                if (currentPage === 1) {
+                    $('#prevBtn').removeClass('btn-outline-secondary').addClass('btn-secondary');
+                } else {
+                    $('#prevBtn').removeClass('btn-secondary').addClass('btn-outline-secondary');
+                }
+
+                if (currentPage >= totalPages) {
+                    $('#nextBtn').removeClass('btn-primary').addClass('btn-secondary');
+                } else {
+                    $('#nextBtn').removeClass('btn-secondary').addClass('btn-primary');
+                }
+            }
+
+            // Update pagination info
+            function updatePaginationInfo() {
+                const startIndex = (currentPage - 1) * itemsPerPage + 1;
+                const endIndex = Math.min(currentPage * itemsPerPage, filteredRows.length);
+                const total = filteredRows.length;
+
+                if (total === 0) {
+                    $('#pageInfo small').text('No orders to show');
+                } else {
+                    $('#pageInfo small').text(`Showing ${startIndex} to ${endIndex} of ${total} orders`);
+                }
+            }
+
+            // Search functionality
+            $('#searchInput').on('keyup', function() {
+                const searchTerm = $(this).val().toLowerCase();
+
+                if (searchTerm === '') {
+                    filteredRows = [...allRows];
+                } else {
+                    filteredRows = allRows.filter(row => {
+                        const orderNumber = $(row).data('order');
+                        return orderNumber.includes(searchTerm);
+                    });
+                }
+
+                showPage(1);
+            });
+
+            // Clear search
+            $('#clearSearch').click(function() {
+                $('#searchInput').val('');
+                filteredRows = [...allRows];
+                showPage(1);
+            });
+
+            // Pagination buttons
+            $('#prevBtn').click(function() {
+                if (currentPage > 1) {
+                    showPage(currentPage - 1);
+                }
+            });
+
+            $('#nextBtn').click(function() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    showPage(currentPage + 1);
+                }
+            });
+
+            // Add hover effects to table rows
+            $('#ordersTable tbody').on('mouseenter', 'tr', function() {
+                $(this).addClass('bg-light');
+            }).on('mouseleave', 'tr', function() {
+                $(this).removeClass('bg-light');
+            });
+
+            // Initialize everything
+            init();
+        });
+    </script>
+
+    <style>
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.1) !important;
+        }
+
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            border: none;
+        }
+
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        .text-primary {
+            color: #5a5c69 !important;
+            font-weight: 600;
+        }
+
+        .table th {
+            border-top: none;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+
+        #prevBtn.btn-outline-secondary {
+            color: #ffffff; /* visible text color */
+            border-color: #f96332; /* visible border */
+            background-color: #f96332; /* light background instead of transparent */
+        }
+    </style>
+}

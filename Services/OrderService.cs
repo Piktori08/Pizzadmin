@@ -35,5 +35,23 @@ namespace Pizzadmin.Services
         {
             await _context.RemoveAsync(id);
         }
+
+        public async Task<IEnumerable<Order>> GetTodayOrders()
+        {
+            return await _context.GetTodayOrders();
+        }
+
+        public async Task<decimal> TodayRevenue()
+        {
+            return await _context.TodayRevenue();
+        }
+        public async Task<bool> ToggleSeenAsync(int id)
+        {
+            return await _context.ToggleSeenAsync(id);
+        }
+        public async Task<bool> ToggleCompletedAsync(int id)
+        {
+            return await _context.ToggleCompletedAsync(id);
+        }
     }
 }

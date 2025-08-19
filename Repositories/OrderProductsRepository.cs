@@ -36,5 +36,6 @@ namespace Pizzadmin.Repositories
             _context.OrderProducts.RemoveRange(orderProducts);
             await _context.SaveChangesAsync();
         }
+        
     }
 }

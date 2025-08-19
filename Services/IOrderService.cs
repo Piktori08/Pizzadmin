@@ -9,5 +9,9 @@ namespace Pizzadmin.Services
         Task AddOrder(Order order);
         Task UpdateOrder(Order order);
         Task DeleteOrder(int id);
+        Task<IEnumerable<Order>> GetTodayOrders();
+        Task<decimal> TodayRevenue();
+        Task<bool> ToggleSeenAsync(int id);
+        Task<bool> ToggleCompletedAsync(int id);
     }
 }

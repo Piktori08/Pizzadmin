@@ -1,4 +1,5 @@
-﻿using Pizzadmin.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Pizzadmin.Data;
 
 namespace Pizzadmin.Repositories
 {
@@ -8,6 +9,39 @@ namespace Pizzadmin.Repositories
         public OrderRepository(PizzadminContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<Order>> GetTodayOrders()
+        {
+            return await _context.Orders
+                .Where(o => o.CreatedAt.Date == DateTime.Now.Date)
+                .ToListAsync();
+        }
+        public async Task<decimal> TodayRevenue()
+        {
+            return await _context.Orders
+                .Where(o => o.CreatedAt.Date == DateTime.Now.Date)
+                .Select(o => o.TotalPrice)
+                .SumAsync();
+        }
+        public async Task<bool> ToggleSeenAsync(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null) return false;
+
+            order.IsSeen = !order.IsSeen;
+            await _context.SaveChangesAsync();
+            return order.IsSeen;
+        }
+
+        public async Task<bool> ToggleCompletedAsync(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null) return false;
+
+            order.IsCompleted = !order.IsCompleted;
+            await _context.SaveChangesAsync();
+            return order.IsCompleted;
         }
     }
 }
