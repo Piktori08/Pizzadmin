@@ -22,5 +22,14 @@ namespace Pizzadmin.Services
         {
             await _context.DeleteOrderProducts(orderId);
         }
+        public async Task<(int maxSold, int mostSoldProductId)> GetMostSoldProduct(List<int> productIds)
+        {
+            return await _context.GetMostSoldProduct(productIds);
+        }
+
+        public async Task<(int minSold, int minSoldProductId)> GetLeastSoldProduct(List<int> productIds)
+        {
+            return await _context.GetLeastSoldProduct(productIds);
+        }
     }
 }

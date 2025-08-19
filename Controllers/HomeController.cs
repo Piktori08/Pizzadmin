@@ -12,11 +12,15 @@ namespace Pizzadmin.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
+        private readonly IOrderProductsService _orderProductsService;
 
-        public HomeController(ILogger<HomeController> logger ,IOrderService orderService)
+        public HomeController(ILogger<HomeController> logger ,IOrderService orderService, IProductService productService, IOrderProductsService orderProductsService)
         {
             _logger = logger;
             _orderService = orderService;
+            _productService = productService;
+            _orderProductsService = orderProductsService;
         }
 
         public async Task<IActionResult> Index()
@@ -28,6 +32,21 @@ namespace Pizzadmin.Controllers
             ViewBag.TodayRevenue = todayRevenue;
             ViewBag.Orders = todaysOrders;
             ViewBag.TodayOrderCount = todayOrderCount;
+
+
+
+            var pIds = (await _productService.GetProductsAsync()).Select(p => p.Id).ToList();
+
+            var a = await _orderProductsService.GetMostSoldProduct(pIds);
+            var b = await _orderProductsService.GetLeastSoldProduct(pIds);
+
+
+            ViewBag.MostSoldProduct = await _productService.GetProduct(a.mostSoldProductId);
+            ViewBag.MostSoldQuantity = a.maxSold;
+
+            ViewBag.LeastSoldProduct = await _productService.GetProduct(b.minSoldProductId);
+            ViewBag.LeastSoldQuantity = b.minSold;
+
             return View();
         }
 

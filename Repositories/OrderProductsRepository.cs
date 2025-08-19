@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pizzadmin.Data;
+using Pizzadmin.Migrations;
 
 namespace Pizzadmin.Repositories
 {
@@ -36,6 +37,69 @@ namespace Pizzadmin.Repositories
             _context.OrderProducts.RemoveRange(orderProducts);
             await _context.SaveChangesAsync();
         }
-        
+
+        public async Task<(int maxSold, int mostSoldProductId)> GetMostSoldProduct(List<int> productIds)
+        {
+            var list = new List<int[]>();
+
+            foreach (var p in productIds)
+            {
+                var q = await _context.OrderProducts.Where(op => op.ProductId == p).Select(op => op.Quantity).ToListAsync();
+                var sold = q.Sum();
+                var productId = await _context.Products.Where(pr => pr.Id == p).Select(pr => pr.Id).FirstOrDefaultAsync();
+
+                list.Add(new int[] { sold, productId });
+            }
+
+
+            int maxSold = int.MinValue;
+            int mostSoldProductId = -1;
+
+            foreach (var item in list)
+            {
+                int sold = item[0];
+                int productId = item[1];
+
+                if (sold > maxSold)
+                {
+                    maxSold = sold;
+                    mostSoldProductId = productId;
+                }
+            }
+
+            return (maxSold, mostSoldProductId);
+        }
+
+        public async Task<(int minSold, int minSoldProductId)> GetLeastSoldProduct(List<int> productIds)
+        {
+            var list = new List<int[]>();
+
+            foreach (var p in productIds)
+            {
+                var q = await _context.OrderProducts.Where(op => op.ProductId == p).Select(op => op.Quantity).ToListAsync();
+                var sold = q.Sum();
+                var productId = await _context.Products.Where(pr => pr.Id == p).Select(pr => pr.Id).FirstOrDefaultAsync();
+
+                list.Add(new int[] { sold, productId });
+            }
+
+
+            int minSold = int.MaxValue;
+            int minSoldProductId = -1;
+
+            foreach (var item in list)
+            {
+                int sold = item[0];
+                int productId = item[1];
+
+                if (sold < minSold)
+                {
+                    minSold = sold;
+                    minSoldProductId = productId;
+                }
+            }
+
+            return (minSold, minSoldProductId);
+        }
     }
 }
