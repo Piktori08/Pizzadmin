@@ -10,7 +10,6 @@ namespace Pizzadmin.Repositories
         {
             _context = context;
         }
-
         public async Task CreateOrderProducts(int orderId, List<int> productId, List<int> quantities)
         {
             for (int i = 0; i < productId.Count; i++)
@@ -20,7 +19,7 @@ namespace Pizzadmin.Repositories
                     var orderProduct = new OrderProduct
                     {
                         OrderId = orderId,
-                        ProductId = productId[i],
+                        ProductId = productId[i],   
                         Quantity = quantities[i]
                     };
                     await _context.OrderProducts.AddAsync(orderProduct);
@@ -28,7 +27,6 @@ namespace Pizzadmin.Repositories
                 }
             }
         }
-
         public async Task DeleteOrderProducts(int orderId)
         {
             var orderProducts = await _context.OrderProducts.Where(op => op.OrderId == orderId).ToListAsync();
@@ -36,6 +34,5 @@ namespace Pizzadmin.Repositories
             _context.OrderProducts.RemoveRange(orderProducts);
             await _context.SaveChangesAsync();
         }
-        
     }
 }

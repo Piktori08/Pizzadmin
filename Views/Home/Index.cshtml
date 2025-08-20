@@ -11,15 +11,30 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h4>Orders today: @todayOrderCount</h4>
-                <h4>Revenue today: $@todayRevenue.ToString("F2")</h4>
-            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Orders: @todayOrderCount</h4>
+                        <h4>Revenue: $@todayRevenue.ToString("F2")</h4>
+                    </div>
+                    <div class="col-md-6 ">
+                        <form asp-action="Index">
+                            <div class="date-input-group">
+                                <label for="dateRange">Select Date Range</label>
+                                <input type="text" id="dateRange" class="date-input" placeholder="Choose your date range..." readonly name="dateFilter">
+                            </div>
+                            <div class="formt-group">
+                                <button class="btn btn-primary">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
             <div class="card-body">
                 <!-- Search Bar -->
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search by order number...">
+                            <input type="text" id="searchInput" class="form-control mt-2" style="min-height: 40px" placeholder="Search by order number...">
                         </div>
                         <div class="col-md-6">
                             <button id="clearSearch" class="btn btn-secondary">Clear</button>
@@ -209,9 +224,10 @@
 
             // Initialize everything
             init();
-        });
+        })
     </script>
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>x
     <style>
         .table-hover tbody tr:hover {
             background-color: rgba(0, 123, 255, 0.1) !important;
@@ -244,4 +260,211 @@
             background-color: #f96332; /* light background instead of transparent */
         }
     </style>
+        
+    <style>
+            h1 {
+                color: #333;
+                margin-bottom: 30px;
+                font-weight: 600;
+                font-size: 2.2em;
+            }
+
+            .date-input-group {
+                margin-bottom: 30px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 8px;
+                color: #555;
+                font-weight: 500;
+                font-size: 1.1em;
+            }
+
+            .date-input {
+                width: 100%;
+                padding: 15px 20px;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                font-size: 16px;
+                background: white;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+                .date-input:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                }
+
+            .selected-range {
+                background: #f8f9ff;
+                border: 2px solid #667eea;
+                border-radius: 12px;
+                padding: 20px;
+                margin-top: 20px;
+            }
+
+                .selected-range h3 {
+                    color: #333;
+                    margin: 0 0 15px 0;
+                    font-size: 1.3em;
+                }
+
+            .date-display {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .date-item {
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .date-label {
+                font-size: 0.9em;
+                color: #666;
+                margin-bottom: 5px;
+            }
+
+            .date-value {
+                font-size: 1.1em;
+                font-weight: 600;
+                color: #333;
+                padding: 8px;
+                background: white;
+                border-radius: 8px;
+            }
+
+            .duration {
+                margin-top: 15px;
+                padding: 10px;
+                background: #667eea;
+                color: white;
+                border-radius: 8px;
+                font-weight: 500;
+            }
+
+            .clear-btn {
+                background: #ff6b6b;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 14px;
+                margin-top: 15px;
+                transition: background 0.3s ease;
+            }
+
+                .clear-btn:hover {
+                    background: #ff5252;
+                }
+
+            /* Custom Flatpickr styling */
+            .flatpickr-calendar {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                border-radius: 12px;
+                border: none;
+            }
+
+            .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+                background: #667eea;
+                border-color: #667eea;
+            }
+
+            .flatpickr-day.inRange {
+                background: rgba(102, 126, 234, 0.2);
+                border-color: rgba(102, 126, 234, 0.3);
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+        <script>
+            let selectedDates = [];
+
+            const flatpickrInstance = flatpickr("#dateRange", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                defaultDate: "today",
+                maxDate: "today",
+                //showMonths: window.innerWidth > 768 ? 2 : 1,
+                inline: false,
+                static: false,
+                monthSelectorType: "dropdown",
+                yearSelectorType: "dropdown",
+                onChange: function(selectedDates, dateStr, instance) {
+                    handleDateChange(selectedDates, dateStr);
+                },
+                onReady: function(selectedDates, dateStr, instance) {
+                    // Add some custom styling when ready
+                    const calendar = instance.calendarContainer;
+                    calendar.style.fontFamily = 'inherit';
+                }
+            });
+
+            function handleDateChange(dates, dateStr) {
+                selectedDates = dates;
+                const selectedRangeDiv = document.getElementById('selectedRange');
+
+                if (dates.length === 2) {
+                    // Both dates selected
+                    selectedRangeDiv.style.display = 'block';
+
+                    const startDate = dates[0];
+                    const endDate = dates[1];
+
+                    // Format dates for display
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        weekday: 'short'
+                    };
+
+                    document.getElementById('startDate').textContent =
+                        startDate.toLocaleDateString('en-US', options);
+                    document.getElementById('endDate').textContent =
+                        endDate.toLocaleDateString('en-US', options);
+
+                    // Calculate duration
+                    const timeDiff = endDate - startDate;
+                    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                    document.getElementById('duration').textContent =
+                        `Duration: ${daysDiff} day${daysDiff !== 1 ? 's' : ''}`;
+
+                } else if (dates.length === 1) {
+                    // Only start date selected
+                    selectedRangeDiv.style.display = 'block';
+                    document.getElementById('startDate').textContent =
+                        dates[0].toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            weekday: 'short'
+                        });
+                    document.getElementById('endDate').textContent = 'Select end date...';
+                    document.getElementById('duration').textContent = 'Select end date to see duration';
+
+                } else {
+                    // No dates selected
+                    selectedRangeDiv.style.display = 'none';
+                }
+            }
+
+            // Clear button functionality
+            document.getElementById('clearBtn').addEventListener('click', function() {
+                flatpickrInstance.clear();
+                document.getElementById('selectedRange').style.display = 'none';
+                selectedDates = [];
+            });
+
+            // Add some interactive feedback
+            document.getElementById('dateRange').addEventListener('click', function() {
+                this.style.borderColor = '#667eea';
+            });
+        </script>
 }

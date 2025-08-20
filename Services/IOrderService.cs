@@ -13,5 +13,7 @@ namespace Pizzadmin.Services
         Task<decimal> TodayRevenue();
         Task<bool> ToggleSeenAsync(int id);
         Task<bool> ToggleCompletedAsync(int id);
+        Task<IEnumerable<Order>> GetFilteredOrders(string dateFilter);
+        Task<decimal> FilteredRevenue(string dateFilter);
     }
 }

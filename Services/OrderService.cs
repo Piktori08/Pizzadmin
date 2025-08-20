@@ -53,5 +53,15 @@ namespace Pizzadmin.Services
         {
             return await _context.ToggleCompletedAsync(id);
         }
+
+        public async Task<IEnumerable<Order>> GetFilteredOrders(string dateFilter)
+        {
+            return await _context.GetFilteredOrders(dateFilter);
+        }
+
+        public async Task<decimal> FilteredRevenue(string dateFilter)
+        {
+            return await _context.FilteredRevenue(dateFilter);
+        }
     }
 }
