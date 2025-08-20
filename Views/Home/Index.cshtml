@@ -5,6 +5,12 @@
     var orders = ViewBag.Orders as IEnumerable<Pizzadmin.Data.Order>;
     var todayOrderCount = ViewBag.TodayOrderCount ?? 0;
     var todayRevenue = ViewBag.TodayRevenue as decimal? ?? 0m;
+
+    var productMax = ViewBag.MostSoldProduct as Pizzadmin.Data.Product;
+    var quantityMax = ViewBag.MostSoldQuantity as int?;
+
+    var productMin = ViewBag.LeastSoldProduct as Pizzadmin.Data.Product;
+    var quantityMin = ViewBag.LeastSoldQuantity as int?;
 }
 
 <div class="row">
@@ -34,7 +40,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" id="searchInput" class="form-control mt-2" style="min-height: 40px" placeholder="Search by order number...">
+                            <input type="text" id="searchInput" class="form-control mt-2" style="min-height: 40px;" placeholder="Search by order number...">
                         </div>
                         <div class="col-md-6">
                             <button id="clearSearch" class="btn btn-secondary">Clear</button>
@@ -98,8 +104,57 @@
     </div>
 
     <div class="col-md-6">
-        <div class="card">
-           
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card h-100 product-card">
+                    <div class="card-img-container position-relative">
+                        @if (!string.IsNullOrEmpty(productMax?.ImageUrl))
+                        {
+                            <img src="@productMax?.ImageUrl" class="card-img-top" alt="@productMax?.Name" />
+                        }
+                        else
+                        {
+                            <div class="no-image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <span>No Image</span>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@productMax?.Name</h5>
+                        <p class="card-text flex-grow-1">@productMax?.Description</p>
+                        <div class="mt-auto">
+                            <h4 class="text-primary mb-3">$@productMax?.Price.ToString("F2") <span class="float-right text-success">@quantityMax sold</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 product-card">
+                    <div class="card-img-container position-relative">
+                        @if (!string.IsNullOrEmpty(productMin?.ImageUrl))
+                        {
+                            <img src="@productMin?.ImageUrl" class="card-img-top" alt="@productMin?.Name" />
+                        }
+                        else
+                        {
+                            <div class="no-image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <span>No Image</span>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@productMin?.Name</h5>
+                        <p class="card-text flex-grow-1">@productMin?.Description</p>
+                        <div class="mt-auto">
+                            <h4 class="text-primary mb-3">$@productMin?.Price.ToString("F2") <span class="float-right text-danger">@quantityMin sold</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -260,211 +315,278 @@
             background-color: #f96332; /* light background instead of transparent */
         }
     </style>
-        
+
     <style>
-            h1 {
-                color: #333;
-                margin-bottom: 30px;
-                font-weight: 600;
-                font-size: 2.2em;
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #dee2e6;
+        }
+
+            .product-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
 
-            .date-input-group {
-                margin-bottom: 30px;
-            }
-
-            label {
-                display: block;
-                margin-bottom: 8px;
-                color: #555;
-                font-weight: 500;
-                font-size: 1.1em;
-            }
-
-            .date-input {
-                width: 100%;
-                padding: 15px 20px;
-                border: 2px solid #e0e0e0;
-                border-radius: 12px;
-                font-size: 16px;
-                background: white;
-                transition: all 0.3s ease;
-                box-sizing: border-box;
-            }
-                .date-input:focus {
-                    outline: none;
-                    border-color: #667eea;
-                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                .product-card:hover .card-actions {
+                    opacity: 1;
                 }
 
-            .selected-range {
-                background: #f8f9ff;
-                border: 2px solid #667eea;
-                border-radius: 12px;
-                padding: 20px;
-                margin-top: 20px;
+        .card-img-container {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-img-top {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .no-image-placeholder {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+
+            .no-image-placeholder i {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
             }
 
-                .selected-range h3 {
-                    color: #333;
-                    margin: 0 0 15px 0;
-                    font-size: 1.3em;
-                }
+        .card-actions {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            gap: 5px;
+            float: inline-end;
+        }
 
-            .date-display {
+
+            .card-actions .btn {
+                width: 35px;
+                height: 35px;
+                padding: 0;
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
-                gap: 20px;
-                flex-wrap: wrap;
+                justify-content: center;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             }
 
-            .date-item {
-                flex: 1;
-                min-width: 120px;
-            }
-
-            .date-label {
-                font-size: 0.9em;
-                color: #666;
-                margin-bottom: 5px;
-            }
-
-            .date-value {
-                font-size: 1.1em;
-                font-weight: 600;
-                color: #333;
-                padding: 8px;
-                background: white;
-                border-radius: 8px;
-            }
-
-            .duration {
-                margin-top: 15px;
-                padding: 10px;
-                background: #667eea;
-                color: white;
-                border-radius: 8px;
-                font-weight: 500;
-            }
-
-            .clear-btn {
-                background: #ff6b6b;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 14px;
-                margin-top: 15px;
-                transition: background 0.3s ease;
-            }
-
-                .clear-btn:hover {
-                    background: #ff5252;
+                .card-actions .btn:hover {
+                    transform: scale(1.1);
                 }
+    </style>
 
-            /* Custom Flatpickr styling */
-            .flatpickr-calendar {
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-                border-radius: 12px;
-                border: none;
-            }
 
-            .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
-                background: #667eea;
-                border-color: #667eea;
-            }
+     <style>
+         h1 {
+             color: #333;
+             margin-bottom: 30px;
+             font-weight: 600;
+             font-size: 2.2em;
+         }
 
-            .flatpickr-day.inRange {
-                background: rgba(102, 126, 234, 0.2);
-                border-color: rgba(102, 126, 234, 0.3);
-            }
-        </style>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
-        <script>
-            let selectedDates = [];
+         .date-input-group {
+             margin-bottom: 30px;
+         }
 
-            const flatpickrInstance = flatpickr("#dateRange", {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                defaultDate: "today",
-                maxDate: "today",
-                //showMonths: window.innerWidth > 768 ? 2 : 1,
-                inline: false,
-                static: false,
-                monthSelectorType: "dropdown",
-                yearSelectorType: "dropdown",
-                onChange: function(selectedDates, dateStr, instance) {
-                    handleDateChange(selectedDates, dateStr);
-                },
-                onReady: function(selectedDates, dateStr, instance) {
-                    // Add some custom styling when ready
-                    const calendar = instance.calendarContainer;
-                    calendar.style.fontFamily = 'inherit';
-                }
-            });
+         label {
+             display: block;
+             margin-bottom: 8px;
+             color: #555;
+             font-weight: 500;
+             font-size: 1.1em;
+         }
 
-            function handleDateChange(dates, dateStr) {
-                selectedDates = dates;
-                const selectedRangeDiv = document.getElementById('selectedRange');
+         .date-input {
+             width: 100%;
+             padding: 15px 20px;
+             border: 2px solid #e0e0e0;
+             border-radius: 12px;
+             font-size: 16px;
+             background: white;
+             transition: all 0.3s ease;
+             box-sizing: border-box;
+         }
+             .date-input:focus {
+                 outline: none;
+                 border-color: #667eea;
+                 box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+             }
 
-                if (dates.length === 2) {
-                    // Both dates selected
-                    selectedRangeDiv.style.display = 'block';
+         .selected-range {
+             background: #f8f9ff;
+             border: 2px solid #667eea;
+             border-radius: 12px;
+             padding: 20px;
+             margin-top: 20px;
+         }
 
-                    const startDate = dates[0];
-                    const endDate = dates[1];
+             .selected-range h3 {
+                 color: #333;
+                 margin: 0 0 15px 0;
+                 font-size: 1.3em;
+             }
 
-                    // Format dates for display
-                    const options = {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        weekday: 'short'
-                    };
+         .date-display {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             gap: 20px;
+             flex-wrap: wrap;
+         }
 
-                    document.getElementById('startDate').textContent =
-                        startDate.toLocaleDateString('en-US', options);
-                    document.getElementById('endDate').textContent =
-                        endDate.toLocaleDateString('en-US', options);
+         .date-item {
+             flex: 1;
+             min-width: 120px;
+         }
 
-                    // Calculate duration
-                    const timeDiff = endDate - startDate;
-                    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+         .date-label {
+             font-size: 0.9em;
+             color: #666;
+             margin-bottom: 5px;
+         }
 
-                    document.getElementById('duration').textContent =
-                        `Duration: ${daysDiff} day${daysDiff !== 1 ? 's' : ''}`;
+         .date-value {
+             font-size: 1.1em;
+             font-weight: 600;
+             color: #333;
+             padding: 8px;
+             background: white;
+             border-radius: 8px;
+         }
 
-                } else if (dates.length === 1) {
-                    // Only start date selected
-                    selectedRangeDiv.style.display = 'block';
-                    document.getElementById('startDate').textContent =
-                        dates[0].toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            weekday: 'short'
-                        });
-                    document.getElementById('endDate').textContent = 'Select end date...';
-                    document.getElementById('duration').textContent = 'Select end date to see duration';
+         .duration {
+             margin-top: 15px;
+             padding: 10px;
+             background: #667eea;
+             color: white;
+             border-radius: 8px;
+             font-weight: 500;
+         }
 
-                } else {
-                    // No dates selected
-                    selectedRangeDiv.style.display = 'none';
-                }
-            }
+         .clear-btn {
+             background: #ff6b6b;
+             color: white;
+             border: none;
+             padding: 10px 20px;
+             border-radius: 8px;
+             cursor: pointer;
+             font-size: 14px;
+             margin-top: 15px;
+             transition: background 0.3s ease;
+         }
 
-            // Clear button functionality
-            document.getElementById('clearBtn').addEventListener('click', function() {
-                flatpickrInstance.clear();
-                document.getElementById('selectedRange').style.display = 'none';
-                selectedDates = [];
-            });
+             .clear-btn:hover {
+                 background: #ff5252;
+             }
 
-            // Add some interactive feedback
-            document.getElementById('dateRange').addEventListener('click', function() {
-                this.style.borderColor = '#667eea';
-            });
-        </script>
+         /* Custom Flatpickr styling */
+         .flatpickr-calendar {
+             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+             border-radius: 12px;
+             border: none;
+         }
+
+         .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+             background: #667eea;
+             border-color: #667eea;
+         }
+
+         .flatpickr-day.inRange {
+             background: rgba(102, 126, 234, 0.2);
+             border-color: rgba(102, 126, 234, 0.3);
+         }
+     </style>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+     <script>
+         let selectedDates = [];
+
+         const flatpickrInstance = flatpickr("#dateRange", {
+             mode: "range",
+             dateFormat: "Y-m-d",
+             defaultDate: "today",
+             maxDate: "today",
+             //showMonths: window.innerWidth > 768 ? 2 : 1,
+             inline: false,
+             static: false,
+             monthSelectorType: "dropdown",
+             yearSelectorType: "dropdown",
+             onChange: function(selectedDates, dateStr, instance) {
+                 handleDateChange(selectedDates, dateStr);
+             },
+             onReady: function(selectedDates, dateStr, instance) {
+                 // Add some custom styling when ready
+                 const calendar = instance.calendarContainer;
+                 calendar.style.fontFamily = 'inherit';
+             }
+         });
+
+         function handleDateChange(dates, dateStr) {
+             selectedDates = dates;
+             const selectedRangeDiv = document.getElementById('selectedRange');
+
+             if (dates.length === 2) {
+                 // Both dates selected
+                 selectedRangeDiv.style.display = 'block';
+
+                 const startDate = dates[0];
+                 const endDate = dates[1];
+
+                 // Format dates for display
+                 const options = {
+                     year: 'numeric',
+                     month: 'long',
+                     day: 'numeric',
+                     weekday: 'short'
+                 };
+
+                 document.getElementById('startDate').textContent =
+                     startDate.toLocaleDateString('en-US', options);
+                 document.getElementById('endDate').textContent =
+                     endDate.toLocaleDateString('en-US', options);
+
+                 // Calculate duration
+                 const timeDiff = endDate - startDate;
+                 const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                 document.getElementById('duration').textContent =
+                     `Duration: ${daysDiff} day${daysDiff !== 1 ? 's' : ''}`;
+
+             } else if (dates.length === 1) {
+                 // Only start date selected
+                 selectedRangeDiv.style.display = 'block';
+                 document.getElementById('startDate').textContent =
+                     dates[0].toLocaleDateString('en-US', {
+                         year: 'numeric',
+                         month: 'long',
+                         day: 'numeric',
+                         weekday: 'short'
+                     });
+                 document.getElementById('endDate').textContent = 'Select end date...';
+                 document.getElementById('duration').textContent = 'Select end date to see duration';
+
+             } else {
+                 // No dates selected
+                 selectedRangeDiv.style.display = 'none';
+             }
+         }
+
+         // Clear button functionality
+         document.getElementById('clearBtn').addEventListener('click', function() {
+             flatpickrInstance.clear();
+             document.getElementById('selectedRange').style.display = 'none';
+             selectedDates = [];
+         });
+
+         // Add some interactive feedback
+         document.getElementById('dateRange').addEventListener('click', function() {
+             this.style.borderColor = '#667eea';
+         });
+     </script>
 }
