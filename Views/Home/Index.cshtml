@@ -19,22 +19,28 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-md-6">
-                        <h4>Orders: @todayOrderCount</h4>
-                        <h4>Revenue: $@todayRevenue.ToString("F2")</h4>
+                        <h4><span class="badge badge-pill badge-info">Orders: @todayOrderCount</span> &ensp; <span class="badge badge-pill badge-success">Revenue: $@todayRevenue.ToString("F2")</span></h4>
                     </div>
-                    <div class="col-md-6 ">
+                    <div class="col-md-6">
                         <form asp-action="Index">
-                            <div class="date-input-group">
-                                <label for="dateRange">Select Date Range</label>
-                                <input type="text" id="dateRange" class="date-input" placeholder="Choose your date range..." readonly name="dateFilter">
-                            </div>
-                            <div class="formt-group">
-                                <button class="btn btn-primary">Search</button>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="date-input-group">
+                                        <label for="dateRange">Select Date Range</label>
+                                        <input type="text" id="dateRange" class="date-input" placeholder="Choose your date range..." readonly name="dateFilter">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <button class="btn btn-outline-primary mt-4" style="min-height: 55px; border-radius: 12px;"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
                 </div>
+                <hr />
             <div class="card-body">
                 <!-- Search Bar -->
                 <div class="mb-3">
@@ -43,7 +49,7 @@
                             <input type="text" id="searchInput" class="form-control mt-2" style="min-height: 40px;" placeholder="Search by order number...">
                         </div>
                         <div class="col-md-6">
-                            <button id="clearSearch" class="btn btn-secondary">Clear</button>
+                            <button id="clearSearch" class="btn btn-secondary"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -122,7 +128,7 @@
 
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">@productMax?.Name</h5>
+                        <h5 class="card-title">@productMax?.Name <span class="text-success"><i class="fa-solid fa-arrow-trend-up"></i></span></h5>
                         <p class="card-text flex-grow-1">@productMax?.Description</p>
                         <div class="mt-auto">
                             <h4 class="text-primary mb-3">$@productMax?.Price.ToString("F2") <span class="float-right text-success">@quantityMax sold</span></h4>
@@ -147,7 +153,7 @@
 
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">@productMin?.Name</h5>
+                        <h5 class="card-title">@productMin?.Name <span class="text-danger"><i class="fa-solid fa-arrow-trend-down"></i></span></h5>
                         <p class="card-text flex-grow-1">@productMin?.Description</p>
                         <div class="mt-auto">
                             <h4 class="text-primary mb-3">$@productMin?.Price.ToString("F2") <span class="float-right text-danger">@quantityMin sold</span></h4>
@@ -391,9 +397,9 @@
              font-size: 2.2em;
          }
 
-         .date-input-group {
+         /* .date-input-group {
              margin-bottom: 30px;
-         }
+         } */
 
          label {
              display: block;
@@ -408,7 +414,7 @@
              padding: 15px 20px;
              border: 2px solid #e0e0e0;
              border-radius: 12px;
-             font-size: 16px;
+             /* font-size: 16px; */
              background: white;
              transition: all 0.3s ease;
              box-sizing: border-box;

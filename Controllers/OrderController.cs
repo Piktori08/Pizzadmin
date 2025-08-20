@@ -22,7 +22,7 @@ namespace Pizzadmin.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var orders = await _orderService.GetOrdersAsync();
+            var orders = (await _orderService.GetOrdersAsync()).OrderByDescending(o => o.CreatedAt);
             ViewData["active"] = "orders";
             return View(orders);
         }
