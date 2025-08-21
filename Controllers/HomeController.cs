@@ -27,9 +27,11 @@ namespace Pizzadmin.Controllers
         {
             ViewData["active"] = "dashboard";
 
+            ViewBag.ViewDateFilter = dateFilter;
+
             if (dateFilter != null)
             {
-                var filteredOrders = await _orderService.GetFilteredOrders(dateFilter);
+                var filteredOrders = (await _orderService.GetFilteredOrders(dateFilter)).OrderByDescending(o => o.CreatedAt);
                 var filteredOrderCount = filteredOrders.Count();
                 var filteredRevenue = await _orderService.FilteredRevenue(dateFilter);
 
@@ -39,7 +41,7 @@ namespace Pizzadmin.Controllers
             }
             else
             {
-                var todaysOrders = await _orderService.GetTodayOrders();
+                var todaysOrders = (await _orderService.GetTodayOrders()).OrderByDescending(o => o.CreatedAt);
                 var todayOrderCount = todaysOrders.Count();
                 var todayRevenue = await _orderService.TodayRevenue();
 

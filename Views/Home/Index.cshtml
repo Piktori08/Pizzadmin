@@ -11,6 +11,8 @@
 
     var productMin = ViewBag.LeastSoldProduct as Pizzadmin.Data.Product;
     var quantityMin = ViewBag.LeastSoldQuantity as int?;
+
+    var viewDateFilter = ViewBag.ViewDateFilter as string;
 }
 
 <div class="row">
@@ -18,25 +20,15 @@
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-md-6">
-                        <h4><span class="badge badge-pill badge-info">Orders: @todayOrderCount</span> &ensp; <span class="badge badge-pill badge-success">Revenue: $@todayRevenue.ToString("F2")</span></h4>
-                    </div>
-                    <div class="col-md-6">
-                        <form asp-action="Index">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div class="date-input-group">
-                                        <label for="dateRange">Select Date Range</label>
-                                        <input type="text" id="dateRange" class="date-input" placeholder="Choose your date range..." readonly name="dateFilter">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <button class="btn btn-outline-primary mt-4" style="min-height: 55px; border-radius: 12px;"><i class="fas fa-search"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="col-md-12">
+                        <h4>
+                           <span class="badge badge-pill badge-info" style="font-size: larger">
+                                Orders: @todayOrderCount
+                           </span> &ensp;
+                           <span class="badge badge-pill badge-success" style="font-size: larger">
+                                Revenue: $@todayRevenue.ToString("F2")
+                           </span>
+                        </h4>
                     </div>
                 </div>
                 </div>
@@ -44,14 +36,31 @@
             <div class="card-body">
                 <!-- Search Bar -->
                 <div class="mb-3">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="text" id="searchInput" class="form-control mt-2" style="min-height: 40px;" placeholder="Search by order number...">
+                    <form asp-action="Index">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" id="searchInput" class="form-control mt-2" style="min-height: 40px;" placeholder="Search by order number...">
+                                    </div>
+                                    <div class="col-md-6">
+                                        @if (viewDateFilter != null)
+                                        {
+                                            <input type="text" id="dateRange" class="date-input form-control mt-2" style="min-height: 40px;" value="@viewDateFilter" placeholder="Choose your date range..." readonly name="dateFilter">
+                                        }
+                                        else
+                                        {
+                                            <input type="text" id="dateRange" class="date-input form-control mt-2" style="min-height: 40px;" placeholder="Choose your date range..." readonly name="dateFilter">
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <a asp-action="Index" class="btn btn-secondary float-right ml-2"><i class="fas fa-trash"></i></a>
+                                <button class="btn btn-outline-primary float-right"><i class="fas fa-search"></i></button>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <button id="clearSearch" class="btn btn-secondary"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
 
                 <!-- Orders Table -->
@@ -71,9 +80,11 @@
                                 @foreach (var p in orders)
                                 {
                                     no++;
-                                    <tr data-order="@p.OrderNumber.ToLower()">
+                                    <tr>
                                         <td>@no</td>
-                                        <td>@p.OrderNumber</td>
+                                        <td>
+                                            <a asp-controller="Order" asp-action="ViewReceipt" asp-route-orderId="@p.Id" target="_blank" style="font-size: medium">@p.OrderNumber</a>
+                                        </td>
                                         <td>$@p.TotalPrice.ToString("F2")</td>
                                         <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                                     </tr>
@@ -409,12 +420,12 @@
              font-size: 1.1em;
          }
 
-         .date-input {
+         /* .date-input {
              width: 100%;
              padding: 15px 20px;
              border: 2px solid #e0e0e0;
              border-radius: 12px;
-             /* font-size: 16px; */
+             font-size: 16px;
              background: white;
              transition: all 0.3s ease;
              box-sizing: border-box;
@@ -423,7 +434,7 @@
                  outline: none;
                  border-color: #667eea;
                  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-             }
+             } */
 
          .selected-range {
              background: #f8f9ff;
@@ -516,7 +527,7 @@
          const flatpickrInstance = flatpickr("#dateRange", {
              mode: "range",
              dateFormat: "Y-m-d",
-             defaultDate: "today",
+             //defaultDate: "today",
              maxDate: "today",
              //showMonths: window.innerWidth > 768 ? 2 : 1,
              inline: false,

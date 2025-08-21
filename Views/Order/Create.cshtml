@@ -80,6 +80,8 @@
 
 @section Scripts {
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         /* .card {
             width: 90%;
@@ -215,7 +217,7 @@
                     </div>`
                 );
                 totalPrice += parseFloat(productPrice);
-                document.getElementById('full-total').innerHTML = totalPrice;
+                document.getElementById('full-total').innerHTML = totalPrice.toFixed(2);
             }
             else {
                 let quantitySpan = document.getElementById('spanQuantity-' + productId);
@@ -228,9 +230,9 @@
                 let priceSpan = document.getElementById('spanPrice-' + productId);
                 let currentPrice = parseFloat(priceSpan.innerHTML);
                 currentPrice += parseFloat(productPrice);
-                priceSpan.innerHTML = currentPrice;
+                priceSpan.innerHTML = currentPrice.toFixed(2);
                 totalPrice += parseFloat(productPrice);
-                document.getElementById('full-total').innerHTML = totalPrice;
+                document.getElementById('full-total').innerHTML = totalPrice.toFixed(2);
             }
 
             let quantitySpan = document.getElementById('spanQuantity-' + productId);
@@ -277,16 +279,16 @@
                     currentQuantity--;
                     quantitySpan.innerHTML = currentQuantity;
                     currentPrice -= parseFloat(productPrice);
-                    priceSpan.innerHTML = currentPrice;
+                    priceSpan.innerHTML = currentPrice.toFixed(2);
                 } else{
                     quantitySpan.innerHTML = currentQuantity;
-                    priceSpan.innerHTML = currentPrice;
+                    priceSpan.innerHTML = currentPrice.toFixed(2);
                 }
                     if (currentQuantity == 0) {
                         row.remove();
                     }
                 totalPrice -= parseFloat(productPrice);
-                document.getElementById('full-total').innerHTML = totalPrice;
+                document.getElementById('full-total').innerHTML = totalPrice.toFixed(2);
 
                 let q = document.getElementById('label-' + productId);
 
@@ -371,11 +373,25 @@
                 console.log('Server response:', data);
                 if (data.success) {
                 // Show success message (optional)
-                alert(data.message);
-                // Redirect using the URL from server
-                window.location.href = data.redirectUrl;
+                    Swal.fire({
+                        title: data.message,
+                        text: "Order Placed Successfully!",
+                        icon: "success",
+                        confirmButtonText: 'Ok',
+                        confirmButtonColor: '#f96332',
+                        allowOutsideClick: false, // Prevents closing by clicking outside
+                        allowEscapeKey: false   // Prevents closing by pressing Escape
+                    }).then((result) => {
+                        // Redirect using the URL from server
+                        window.location.href = data.redirectUrl;
+                    });
+                
                 } else {
-                    alert('Order failed: ' + data.message);
+                    Swal.fire({
+                      title: "Oops...",
+                      text: "Something went wrong!",
+                      icon: "error"
+                    });
                 }
             })
             .catch(error => console.error('Error:', error));

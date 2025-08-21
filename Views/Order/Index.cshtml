@@ -49,7 +49,9 @@
                             
                             <td>@no</td>
                             <td>
-                                <a asp-action="ViewReceipt" asp-route-orderId="@p.Id">@p.OrderNumber</a>
+                                <span class="badge badge-pill badge-primary">
+                                    <a asp-action="ViewReceipt" asp-route-orderId="@p.Id" class="text-white" style="font-size: medium">@p.OrderNumber</a>
+                                </span>
                             </td>
                             <td>$@p.TotalPrice</td>
                             <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
@@ -84,6 +86,11 @@
         .card {
             width: 90%;
             margin-left: 5%;
+        }
+
+        .badge-primary {
+            background: #f96332 !important; /* your hover color */
+            color: #fff !important; /* text color */
         }
 
         button.dt-paging-button:hover {

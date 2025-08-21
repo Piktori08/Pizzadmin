@@ -84,6 +84,7 @@ namespace Pizzadmin.Controllers
         }
         public async Task<IActionResult> ViewReceipt(int orderId)
         {
+            ViewData["active"] = "orders";
             var orderProducts = await _orderProductsService.ViewReceipt(orderId);
             return View(orderProducts);
         }

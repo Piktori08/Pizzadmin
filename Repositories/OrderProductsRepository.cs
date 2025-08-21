@@ -104,6 +104,7 @@ namespace Pizzadmin.Repositories
             return await _context.OrderProducts
                 .Where(op => op.OrderId == orderId)
                 .Include(op => op.Product)
+                .Include(op => op.Order)
                 .ToListAsync();
         }
     }
