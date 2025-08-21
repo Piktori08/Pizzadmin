@@ -99,5 +99,12 @@ namespace Pizzadmin.Repositories
 
             return (minSold, minSoldProductId);
         }
+        public async Task<List<OrderProduct>> ViewReceipt(int orderId)
+        {
+            return await _context.OrderProducts
+                .Where(op => op.OrderId == orderId)
+                .Include(op => op.Product)
+                .ToListAsync();
+        }
     }
 }

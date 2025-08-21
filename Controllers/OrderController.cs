@@ -82,5 +82,10 @@ namespace Pizzadmin.Controllers
 
             return Json(new { success = true, isCompleted = result });
         }
+        public async Task<IActionResult> ViewReceipt(int orderId)
+        {
+            var orderProducts = await _orderProductsService.ViewReceipt(orderId);
+            return View(orderProducts);
+        }
     }
 }

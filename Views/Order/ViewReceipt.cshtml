@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Pizzadmin.Data.OrderProduct>
+@{
+    ViewData["Title"] = "View Receipt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card col-md-6">
+        <div class="card-header">
+            <div class="row">
+                <h2 class="mt-2">Receipt</h2>
+                <a class="btn btn-primary ml-4" style="min-height:30px;" asp-action="Index">
+                    Return
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            @foreach (var orderProduct in Model)
+            {
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h4>Product:</h4>
+                        <p>@orderProduct.Product.Name</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <h4>Quantity</h4>
+                        <p>@orderProduct.Quantity</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <h4>Price</h4>
+                        <p>$@(orderProduct.Quantity* orderProduct.Product.Price)</p>
+                    </div>
+                </div>
+            }
+            <hr />
+            <div class="row">
+                <div class="col-md-9">
+                    <h4>Total Price:</h4>
+                </div>
+                <div class="col-md-3 text-end">
+                    <h4>@Model.Sum(op => op.Quantity * op.Product.Price).ToString("C")</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

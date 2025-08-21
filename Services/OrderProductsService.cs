@@ -31,5 +31,9 @@ namespace Pizzadmin.Services
         {
             return await _context.GetLeastSoldProduct(productIds);
         }
+        public async Task<List<OrderProduct>> ViewReceipt(int orderId)
+        {
+            return await _context.ViewReceipt(orderId);
+        }
     }
 }

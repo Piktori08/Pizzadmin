@@ -8,5 +8,6 @@ namespace Pizzadmin.Services
         Task DeleteOrderProducts(int orderId);
         Task<(int maxSold, int mostSoldProductId)> GetMostSoldProduct(List<int> productIds);
         Task<(int minSold, int minSoldProductId)> GetLeastSoldProduct(List<int> productIds);
+        Task<List<OrderProduct>> ViewReceipt(int orderId);
     }
 }

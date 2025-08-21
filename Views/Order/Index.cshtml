@@ -46,8 +46,11 @@
                     {
                         no++;
                         <tr>
+                            
                             <td>@no</td>
-                            <td>@p.OrderNumber</td>
+                            <td>
+                                <a asp-action="ViewReceipt" asp-route-orderId="@p.Id">@p.OrderNumber</a>
+                            </td>
                             <td>$@p.TotalPrice</td>
                             <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                             <td class="status-cell">
