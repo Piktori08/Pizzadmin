@@ -10,6 +10,15 @@ builder.Services.AddDbContext<PizzadminContext>(Options => Options.UseSqlServer(
 
 
 // Add services to the container.
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 builder.Services.AddControllersWithViews()
 .AddNewtonsoftJson(options =>
  {
@@ -50,6 +59,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseCors("AllowAll");
 
 app.MapControllerRoute(
     name: "default",
