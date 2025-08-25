@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var no = 0;
 }
-
 <div class="card">
     <div class="card-header">
         <div class="row">
@@ -18,7 +17,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped" id="example">
+            <table class="table table-striped" id="example" style="display: none;">
                 <thead class="text-primary">
                     <tr>
                         <th>
@@ -89,35 +88,42 @@
         }
 
         .badge-primary {
-            background: #f96332 !important; /* your hover color */
-            color: #fff !important; /* text color */
+            background: #f96332 !important;
+            color: #fff !important;
         }
 
         button.dt-paging-button:hover {
-            background: #f96332 !important; /* your hover color */
-            color: #fff !important; /* text color */
+            background: #f96332 !important;
+            color: #fff !important;
         }
 
-        /* Current (active) page button */
         button.dt-paging-button.current {
-            background: #f96332 !important; /* Blue (or your color) */
-            color: white !important; 
+            background: #f96332 !important;
+            color: white !important;
             border-color: #f96332 !important;
         }
-        /* Disabled state */
+
         button.dt-paging-button.disabled {
             background-color: #e9ecef !important;
             color: #6c757d !important;
             cursor: not-allowed;
         }
     </style>
-    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
-     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
 
+    <!-- Remove the inline script since we're hiding in HTML now -->
+
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 
     <script>
-        $('#example').DataTable();
         $(document).ready(function () {
+            // Initialize DataTable
+            var table = $('#example').DataTable({
+                "initComplete": function() {
+                    // Show table with fade in effect
+                    $('#example').show().hide().fadeIn(300);
+                }
+            });
+
             // Toggle Seen
             $('#example').on('click', '.seen-btn', function () {
                 const btn = $(this);
@@ -155,5 +161,4 @@
             });
         });
     </script>
-   
 }
