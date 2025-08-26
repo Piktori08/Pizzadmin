@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pizzadmin.Data;
+using Pizzadmin.Models;
 using Pizzadmin.Services;
 
 namespace Pizzadmin.Controllers
@@ -28,10 +29,22 @@ namespace Pizzadmin.Controllers
 
         [HttpGet("addOrder")]
         //-- fetch('https://localhost:44365/api/Pizzadmin/orders')
-        public async Task<IEnumerable<Order>> AddOrder()
+        public async Task<IActionResult> AddOrder([FromBody] OrderForCreation model)
         {
-            var orders = await _orderService.GetOrdersAsync();
-            return orders;
+            var productIds = model.ProductIds.Select(int.Parse).ToList();
+            var quantities = model.Quantities.Select(int.Parse).ToList();
+
+            var order = new Order
+            {
+                TotalPrice = decimal.Parse(model.TotalPrice),
+            };
+            await _orderService.AddOrder(order);
+
+            order.OrderNumber = $"Order_{order.Id}";
+            await _orderService.UpdateOrder(order);
+
+            await _orderProductsService.CreateOrderProducts(order.Id, productIds, quantities);
+            return Ok(new { success = true, message = "Order processed." });
         }
     }
 }
