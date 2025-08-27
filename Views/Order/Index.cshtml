@@ -33,6 +33,9 @@
                             Created At
                         </th>
                         <th>
+                            Type
+                        </th>
+                        <th>
                             Status
                         </th>
                         <th class="text-right">
@@ -54,6 +57,7 @@
                             </td>
                             <td>$@p.TotalPrice</td>
                             <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@(p.Type != null ? p.Type : "Not Specified")</td>
                             <td class="status-cell">
                                 <button class="btn btn-sm @(p.IsSeen ? "btn-success" : "btn-secondary") seen-btn"
                                         data-id="@p.Id"

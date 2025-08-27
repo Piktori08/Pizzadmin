@@ -48,6 +48,7 @@ namespace Pizzadmin.Controllers
             var order = new Order
             {
                 TotalPrice = decimal.Parse(model.TotalPrice),
+                Type = "In Person"
             };
             await _orderService.AddOrder(order);
             

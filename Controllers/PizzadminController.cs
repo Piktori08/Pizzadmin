@@ -27,9 +27,9 @@ namespace Pizzadmin.Controllers
             return products;
         }
 
-        [HttpGet("addOrder")]
+        [HttpPost("addOrder")]
         //-- fetch('https://localhost:44365/api/Pizzadmin/orders')
-        public async Task<IActionResult> AddOrder([FromBody] OrderForCreation model)
+        public async Task<IActionResult> AddOrder([FromBody] OrderForCreationAPI model)
         {
             var productIds = model.ProductIds.Select(int.Parse).ToList();
             var quantities = model.Quantities.Select(int.Parse).ToList();
@@ -37,6 +37,7 @@ namespace Pizzadmin.Controllers
             var order = new Order
             {
                 TotalPrice = decimal.Parse(model.TotalPrice),
+                Type = "Delivery"
             };
             await _orderService.AddOrder(order);
 
