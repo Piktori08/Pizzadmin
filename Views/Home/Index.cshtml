@@ -13,6 +13,7 @@
     var quantityMin = ViewBag.LeastSoldQuantity as int?;
 
     var viewDateFilter = ViewBag.ViewDateFilter as string;
+    var deliveryCount = ViewBag.DeliveryOrdersCount as int?;
 }
 
 <div class="row">
@@ -21,13 +22,22 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>
-                           <span class="badge badge-pill badge-info" style="font-size: larger">
-                                Orders: @todayOrderCount
-                           </span> &ensp;
-                           <span class="badge badge-pill badge-success" style="font-size: larger">
+                        <h4 class="d-flex align-items-center">
+                            <span class="badge badge-pill badge-card d-inline-flex flex-column text-start">
+                                <span class="main-info">
+                                    <i class="fas fa-box text-brown"></i> Orders: @todayOrderCount
+                                </span>
+                                <span class="sub-info small text-muted">
+                                    <i class="fas fa-truck text-primary "></i> Delivery: @deliveryCount |
+                                    <i class="fas fa-store text-success "></i> In-Store: @(todayOrderCount - deliveryCount)
+                                </span>
+                            </span>
+
+                            <!-- Revenue Badge -->
+                            <span class="badge badge-pill badge-success d-flex justify-content-center align-items-center" id="revenue-design">
                                 Revenue: $@todayRevenue.ToString("F2")
-                           </span>
+                            </span>
+
                         </h4>
                     </div>
                 </div>
@@ -72,6 +82,7 @@
                                 <th>Name</th>
                                 <th>Total</th>
                                 <th>Created at</th>
+                                <th>Type</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,6 +98,7 @@
                                         </td>
                                         <td>$@p.TotalPrice.ToString("F2")</td>
                                         <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@(p.Type != null ? p.Type : "Not Specified")</td>
                                     </tr>
                                 }
                             }
@@ -334,6 +346,26 @@
     </style>
 
     <style>
+
+        #revenue-design{
+            box-sizing: border-box;
+            height:70px;
+            width:245px;
+            text-align:center;
+            border-radius: 15px;
+            margin-left:2%;
+            color: #198754;
+            background-color: white;
+            border: 2px solid #198754;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #revenue-design:hover{
+            color:white;
+            background-color: #198754;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.2);
+        }
         .product-card {
             transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid #dee2e6;
@@ -398,7 +430,36 @@
                     transform: scale(1.1);
                 }
     </style>
+    <style>
+        .badge-card {
+            background: white;
+            color: #f96332;
+            border: 2px solid #f96332;
+            padding: 15px 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
+            .badge-card:hover {
+                background: #f96332;
+                color: white !important;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(23, 162, 184, 0.2);
+            }
+
+            .badge-card .main-info {
+                font-weight: bold;
+                font-size: 18px;
+                margin-bottom: 5px;
+            }
+
+            .badge-card .sub-info {
+                font-size: 14px;
+                opacity: 0.8;
+            }
+    </style>
 
      <style>
          h1 {

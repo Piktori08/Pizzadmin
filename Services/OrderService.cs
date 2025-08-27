@@ -63,5 +63,9 @@ namespace Pizzadmin.Services
         {
             return await _context.FilteredRevenue(dateFilter);
         }
+        public async Task<int> CountDeliveryOrders(string dateFilter)
+        {
+            return await _context.CountDeliveryOrders(dateFilter);
+        }
     }
 }

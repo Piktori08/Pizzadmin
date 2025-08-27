@@ -62,6 +62,8 @@ namespace Pizzadmin.Controllers
             ViewBag.LeastSoldProduct = await _productService.GetProduct(b.minSoldProductId);
             ViewBag.LeastSoldQuantity = b.minSold;
 
+            ViewBag.DeliveryOrdersCount = await _orderService.CountDeliveryOrders(dateFilter);
+
             return View();
         }
 

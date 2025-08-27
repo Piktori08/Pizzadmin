@@ -111,5 +111,38 @@ namespace Pizzadmin.Repositories
                 .SumAsync();
             }
         }
+        public async Task<int> CountDeliveryOrders(string dateFilter)
+        {
+            if (string.IsNullOrWhiteSpace(dateFilter))
+            {
+                return await _context.Orders
+                    .Where(o => o.Type == "Delivery")
+                    .CountAsync();
+            }
+
+            if (dateFilter.Contains(" to ")) // Safe check for range
+            {
+                var parts = dateFilter.Split(" to ");
+                if (parts.Length != 2)
+                {
+                    throw new FormatException("Invalid date range format. Expected: yyyy-MM-dd to yyyy-MM-dd");
+                }
+
+                var from = DateTime.ParseExact(parts[0], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                var to = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                return await _context.Orders
+                .Where(o => o.CreatedAt.Date >= from.Date && o.CreatedAt.Date <= to.Date && o.Type == "Delivery")
+                .CountAsync();
+            }
+            else
+            {
+                var from = DateTime.ParseExact(dateFilter, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                return await _context.Orders
+                .Where(o => o.CreatedAt.Date == from.Date && o.Type == "Delivery")
+                .CountAsync();
+            }
+        }
     }
 }
