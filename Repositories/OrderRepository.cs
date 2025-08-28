@@ -116,7 +116,7 @@ namespace Pizzadmin.Repositories
             if (string.IsNullOrWhiteSpace(dateFilter))
             {
                 return await _context.Orders
-                    .Where(o => o.Type == "Delivery")
+                    .Where(o => o.Type == "Delivery" && o.CreatedAt.Date == DateTime.Now)
                     .CountAsync();
             }
 

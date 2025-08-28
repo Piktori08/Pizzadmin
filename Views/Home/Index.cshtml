@@ -27,9 +27,9 @@
                                 <span class="main-info">
                                     <i class="fas fa-box text-brown"></i> Orders: @todayOrderCount
                                 </span>
-                                <span class="sub-info small text-muted">
-                                    <i class="fas fa-truck text-primary "></i> Delivery: @deliveryCount |
-                                    <i class="fas fa-store text-success "></i> In-Store: @(todayOrderCount - deliveryCount)
+                                <span class="sub-info small">
+                                    <i class="fas fa-truck badge-color-diff"></i> Delivery: @deliveryCount |
+                                    <i class="fas fa-store badge-color-diff"></i> In-Store: @(todayOrderCount - deliveryCount)
                                 </span>
                             </span>
 
@@ -365,6 +365,9 @@
             background-color: #198754;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(23, 162, 184, 0.2);
+        }
+        .badge-color-diff:hover{
+            color:white!important;
         }
         .product-card {
             transition: transform 0.2s, box-shadow 0.2s;
