@@ -33,17 +33,17 @@
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                         </div>
-                        @* <div class="col-sm-6"> *@
-                        @*     <div class="form-group"> *@
-                        @*         <label>Zgjidh Rolin</label> <br /> *@
-                        @*         <select asp-for="RoleId" id="roleList" style="width: 100%;" class="select2" data-placeholder="Zgjidh"> *@
-                        @*             @foreach (var x in Model.Roles) *@
-                        @*             { *@
-                        @*                 <!option value="@x.Id">@x.Name</!option> *@
-                        @*             } *@
-                        @*         </select> *@
-                        @*     </div> *@
-                        @* </div> *@
+                        <div class="col-sm-6">
+                             <div class="form-group">
+                                 <label>User Role</label> <br />
+                                 <select asp-for="RoleId" id="rolelist" style="width: 100%;" class="form-control" data-placeholder="Choose"> 
+                                     @foreach (var x in Model.Roles) 
+                                     { 
+                                         <!option value="@x.Id">@x.Name</!option> 
+                                     } 
+                                 </select> 
+                             </div>
+                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
@@ -84,14 +84,3 @@
     </div>
 
 </div>
-
-@section Scripts {
-    
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
-    
-    <script>
-        $('#roleList').select2();
-    </script>
-}

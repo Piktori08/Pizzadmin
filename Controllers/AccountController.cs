@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pizzadmin.Data;
 using Pizzadmin.Identity;
 using Pizzadmin.Models.AccountViewModels;
+using System.Threading.Tasks;
 
 namespace Pizzadmin.Controllers
 {
@@ -86,11 +87,16 @@ namespace Pizzadmin.Controllers
         [AllowAnonymous]
 
         //[Breadcrumb("Add User", CacheTitle = true, FromAction = "Users.Index")]
-        public IActionResult Register(string returnUrl = null)
+        public async Task<IActionResult> Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             ViewBag.LastElement = "Add User";
-            return View();
+
+            var model = new RegisterViewModel
+            {
+                Roles = await _roleService.GetRolesAsync()
+            };
+            return View(model);
         }
 
         [HttpPost]
