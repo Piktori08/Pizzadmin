@@ -20,7 +20,7 @@ namespace Pizzadmin.Identity
 
         public async Task<IEnumerable<AppUser>> FindAllAsync()
         {
-            return await context.Users.ToListAsync();
+            return await context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
         }
 
         public AppUser GetUser(string id)

@@ -31,7 +31,7 @@
                         <tr>
                             <td>@item.FirstName</td>
                             <td>@item.LastName</td>
-                            <td>@item.Position</td>
+                            <td>@item.UserRoles?.FirstOrDefault()?.Role.Name</td>
                             <td>
                                 <a asp-route-id="@item.Id" asp-action="DeleteUser"><i class="fa fa-trash"></i></a>
                             </td>
