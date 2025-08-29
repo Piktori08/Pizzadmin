@@ -1,0 +1,97 @@
+﻿@model Pizzadmin.Models.AccountViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Add User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <form asp-action="Register" asp-controller="Account" method="post">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="floating-label" for="Text">First Name <span class="text-danger">*</span></label>
+                                <input asp-for="FirstName" required class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="floating-label" for="Text">Last Name <span class="text-danger">*</span></label>
+                                <input asp-for="LastName" required class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="floating-label" for="Text">Email <span class="text-danger">*</span></label>
+                                <input required asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        @* <div class="col-sm-6"> *@
+                        @*     <div class="form-group"> *@
+                        @*         <label>Zgjidh Rolin</label> <br /> *@
+                        @*         <select asp-for="RoleId" id="roleList" style="width: 100%;" class="select2" data-placeholder="Zgjidh"> *@
+                        @*             @foreach (var x in Model.Roles) *@
+                        @*             { *@
+                        @*                 <!option value="@x.Id">@x.Name</!option> *@
+                        @*             } *@
+                        @*         </select> *@
+                        @*     </div> *@
+                        @* </div> *@
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="floating-label" for="Text">Password <span class="text-danger">*</span></label>
+                                <input required asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="floating-label" for="Text">Konfirmo Passsword-in <span class="text-danger">*</span></label>
+                                <input required asp-for="ConfirmPassword" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group ml-3">
+                                    <span class="badge badge-warning">1. Minimum 6 characters (A-Z)</span><br />
+                                    <span class="badge badge-warning">2. One capital letter</span><br />
+                                    <span class="badge badge-warning">3. One special character (?!-.;)</span><br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-sm-12" style="margin-bottom: 40px;">
+                    <div class="col-sm-6">
+                        <a class="btn btn-outline-primary" asp-action="Index" asp-controller="User"><i class="fas fa-arrow-left"></i>&nbsp; Return</a>
+                    </div>
+                    <div class="col-sm-6">
+                        <button style="float:right;" class="btn btn-primary">Add &nbsp;<i class="fas fa-save"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    
+    <script>
+        $('#roleList').select2();
+    </script>
+}
