@@ -21,6 +21,12 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+<style>
+   
+    li{
+        list-style: none;
+    }
+ </style>
 <body>
     <div class="wrapper ">
         <div class="sidebar" data-color="orange">
@@ -94,6 +100,18 @@
                                 </div>
                             </div>
                         </form>
+                        <ul class="navbar-nav m-2">
+                            <li class="nav-item">
+                                <a href="#" id="notificationBell">
+                                    <i class="fas fa-bell"></i>
+                                    <span id="notificationCount" class="badge">0</span>
+                                </a>
+                                <!-- Notifications dropdown (hidden by default) -->
+                                <div id="notificationDropdown" style="display: none; position: absolute; background: white; border: 1px solid #ccc; width: 250px; max-height: 300px; overflow-y: auto;">
+                                    <ul id="notificationsList" style="list-style: none; padding: 10px; margin: 0;"></ul>
+                                </div>
+                            </li>
+                        </ul>
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -174,7 +192,37 @@
 
         });
     </script>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
 
+        let notificationCount = 0;
+
+        connection.on("ReceiveNotification", function (message) {
+            notificationCount++;
+            document.getElementById("notificationCount").textContent = notificationCount;
+            const li = document.createElement("li");
+            li.textContent = message;
+            document.getElementById("notificationsList").prepend(li); // newest on top
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        // Toggle dropdown on bell click
+        document.getElementById("notificationBell").addEventListener("click", function (e) {
+            e.preventDefault();
+            const dropdown = document.getElementById("notificationDropdown");
+            if (dropdown.style.display === "none") {
+                dropdown.style.display = "block";
+                notificationCount = 0; // reset counter when opened
+                document.getElementById("notificationCount").textContent = "0";
+            } else {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
