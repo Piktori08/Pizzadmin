@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizzadmin.Data;
 
@@ -11,9 +12,11 @@ using Pizzadmin.Data;
 namespace Pizzadmin.Migrations
 {
     [DbContext(typeof(PizzadminContext))]
-    partial class PizzadminContextModelSnapshot : ModelSnapshot
+    [Migration("20250901163124_notificationfixfix")]
+    partial class notificationfixfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,9 +123,6 @@ namespace Pizzadmin.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
@@ -340,7 +340,7 @@ namespace Pizzadmin.Migrations
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3e8934c2-245b-4a80-accf-847b6d6bfb60",
+                            ConcurrencyStamp = "7353f5df-7a6f-48bb-b4ae-6a8ebee21615",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "admin",
@@ -348,7 +348,7 @@ namespace Pizzadmin.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@admin.com",
                             NormalizedUserName = "admin@admin.com",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDXYzkrDw1PRDXHKv/UmwiZLejdyfkA03gSVjK6Ipl7sr9fggi3IUEmPezKtHKCDjQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJRFA3/63iNoIaoqFGbc/fTCSy0Uq4qncjk/8dgTp7+lrZ6crFclcQczDlzs0mCrjg==",
                             PhoneNumberConfirmed = false,
                             Position = "Admin",
                             SecurityStamp = "",

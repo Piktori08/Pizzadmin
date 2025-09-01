@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizzadmin.Data;
 
@@ -11,9 +12,11 @@ using Pizzadmin.Data;
 namespace Pizzadmin.Migrations
 {
     [DbContext(typeof(PizzadminContext))]
-    partial class PizzadminContextModelSnapshot : ModelSnapshot
+    [Migration("20250901162738_notifications")]
+    partial class notifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,25 +114,6 @@ namespace Pizzadmin.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Pizzadmin.Data.Notifications", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Pizzadmin.Data.Order", b =>
@@ -340,7 +324,7 @@ namespace Pizzadmin.Migrations
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3e8934c2-245b-4a80-accf-847b6d6bfb60",
+                            ConcurrencyStamp = "00242d4f-c80c-4dfa-ae08-828a5fc9ca14",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "admin",
@@ -348,7 +332,7 @@ namespace Pizzadmin.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@admin.com",
                             NormalizedUserName = "admin@admin.com",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDXYzkrDw1PRDXHKv/UmwiZLejdyfkA03gSVjK6Ipl7sr9fggi3IUEmPezKtHKCDjQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFq2HUCbkYZJV9Y0yVkFLXi6rmywJC2iFQqvMfu2+HOqzF+4fklvtpvLHl/djUmrCw==",
                             PhoneNumberConfirmed = false,
                             Position = "Admin",
                             SecurityStamp = "",

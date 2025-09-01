@@ -52,6 +52,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ProductRepository, ProductRepository>();
 builder.Services.AddScoped<OrderRepository, OrderRepository>();
 builder.Services.AddScoped<OrderProductsRepository, OrderProductsRepository>();
+builder.Services.AddScoped<NotificationRepository, NotificationRepository>();
 #endregion
 
 #region Services
@@ -60,6 +61,7 @@ builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderProductsService, OrderProductsService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 #endregion
 
 var app = builder.Build();
@@ -80,10 +82,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<NotificationHub>("/notificationHub");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
-app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

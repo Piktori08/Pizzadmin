@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pizzadmin.Data;
 
@@ -11,9 +12,11 @@ using Pizzadmin.Data;
 namespace Pizzadmin.Migrations
 {
     [DbContext(typeof(PizzadminContext))]
-    partial class PizzadminContextModelSnapshot : ModelSnapshot
+    [Migration("20250901163921_notificationlastfix")]
+    partial class notificationlastfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
