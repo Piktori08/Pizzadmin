@@ -1,0 +1,16 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=PizzadminDB;Trusted_Connection=True;"
+  },
+  "Jwt": {
+    "Key": "PUT_A_RANDOM_SECRET_HERE",
+    "Issuer": "Pizzadmin",
+    "Audience": "PizzadminUsers",
+    "ExpireMinutes": 60
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
+  }
+}
