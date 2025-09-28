@@ -340,7 +340,7 @@ namespace Pizzadmin.Migrations
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5657485a-04ee-43e1-8c75-a860dc80a29a",
+                            ConcurrencyStamp = "3e8934c2-245b-4a80-accf-847b6d6bfb60",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "admin",
@@ -348,7 +348,7 @@ namespace Pizzadmin.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@admin.com",
                             NormalizedUserName = "admin@admin.com",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMT/ABPMDQ0XEathFDfDpBj9SWzInEY4ECjpryQ5o4aj46yhLPiYffbxQTXM6AE8cw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDXYzkrDw1PRDXHKv/UmwiZLejdyfkA03gSVjK6Ipl7sr9fggi3IUEmPezKtHKCDjQ==",
                             PhoneNumberConfirmed = false,
                             Position = "Admin",
                             SecurityStamp = "",
