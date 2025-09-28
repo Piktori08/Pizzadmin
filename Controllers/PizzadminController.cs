@@ -63,8 +63,7 @@ public class PizzadminController : Controller
             // 1️⃣ Save notification to database
             _notificationService.Add(message);
 
-            // 2️⃣ Send real-time notification via SignalR
-            await _hubContext.Clients.All.SendAsync("ReceiveNotification", message);
+
             // ---------------------------
 
             return Ok(new { success = true, message = "Order processed.", orderId = order.OrderNumber });
@@ -77,9 +76,10 @@ public class PizzadminController : Controller
 
     // Optional: endpoint to fetch all saved notifications
     [HttpGet("notifications")]
-    public IActionResult GetNotifications()
+    public  IActionResult GetNotifications()
     {
         var notifications = _notificationService.GetAll();
+        _hubContext.Clients.All.SendAsync("SendNotifications", notifications);
         return Ok(notifications);
     }
 }
